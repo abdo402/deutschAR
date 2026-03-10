@@ -1696,7 +1696,11 @@ body, .sidebar, .topbar, .content, .card, .card-header, .card-body,
 .theme-toggle, .search-trigger, .back-to-top,
 .flashcard-front, .flashcard-back,
 .match-card, .fitb-blank, .bookmarks-panel,
-.search-modal, .search-modal-item, .smi-type {
+.search-modal, .search-modal-item, .smi-type,
+.wotd-modal, .wotd-modal-header, .wotd-modal-body,
+.wotd-modal-row, .wotd-modal-close, .wotd-modal-tag,
+.wotd-modal-de, .wotd-modal-en, .wotd-modal-row-label,
+.wotd-modal-row-value {
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease,
@@ -2497,7 +2501,7 @@ section[id], div[id].chapter-divider {
 
 /* ── WOTD MODAL ── */
 .wotd-modal-overlay {
-  display: none;
+  display: flex;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
@@ -2507,8 +2511,18 @@ section[id], div[id].chapter-divider {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  /* Fade in/out instead of display snap */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease,
+              background-color 0.35s ease;
 }
-.wotd-modal-overlay.open { display: flex; }
+.wotd-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
 
 .wotd-modal {
   background: var(--bg-card);
@@ -2518,7 +2532,15 @@ section[id], div[id].chapter-divider {
   max-width: 480px;
   box-shadow: 0 24px 60px rgba(0,0,0,0.45);
   overflow: hidden;
-  animation: searchDrop 0.2s ease;
+  /* Slide-up on open, respects theme transition */
+  transform: translateY(16px) scale(0.97);
+  transition: transform 0.25s ease,
+              background-color 0.35s ease,
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+}
+.wotd-modal-overlay.open .wotd-modal {
+  transform: translateY(0) scale(1);
 }
 
 .wotd-modal-header {
