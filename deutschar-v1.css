@@ -283,7 +283,11 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
 }
 .hamburger span {
   display: block;
@@ -1314,6 +1318,33 @@ body {
   .chapter-divider { margin: 2rem 0 1rem; }
 
   .quiz-choice { padding: 0.55rem 1.4rem; }
+
+  /* ── NEW SECTIONS RESPONSIVE ── */
+  .phrase-list { gap: 0.5rem; }
+  .phrase-card { padding: 0.6rem 0.8rem; }
+  .phrase-card .phrase-de { font-size: 0.88rem; }
+  .phrase-card .phrase-en { font-size: 0.78rem; }
+
+  .vocab-list { gap: 0; }
+  .vocab-row { padding: 0.35rem 0; font-size: 0.85rem; }
+
+  .countries-grid { grid-template-columns: 1fr; }
+  .country-group { padding: 0.8rem; }
+
+  .sep-prefix-row { grid-template-columns: 70px 1fr; }
+  .sep-pfx-ex { display: none; }
+
+  .modal-grid { grid-template-columns: 1fr; }
+  .modal-card { padding: 0.8rem; }
+
+  .prep-grid { grid-template-columns: 1fr 1fr; }
+
+  .opposites-grid { grid-template-columns: 1fr 1fr; }
+
+  .filter-btn { padding: 0.5rem 0.8rem; min-height: 44px; }
+  .theme-toggle { min-height: 44px; padding: 0.4rem 0.9rem; }
+  .nav-item { min-height: 44px; display: flex; align-items: center; }
+  .quiz-choice { min-height: 44px; }
 }
 
 @media (max-width: 480px) {
@@ -1321,6 +1352,16 @@ body {
   .phrase-grid { grid-template-columns: 1fr; }
   .colors-grid { grid-template-columns: repeat(3, 1fr); }
   .modal-grid { grid-template-columns: 1fr; }
+
+  .prep-grid { grid-template-columns: 1fr; }
+  .opposites-grid { grid-template-columns: 1fr; }
+  .countries-grid { grid-template-columns: 1fr; }
+  .sep-prefix-row { grid-template-columns: 60px 1fr; font-size: 0.78rem; }
+  .vocab-row .de, .vocab-row .en { font-size: 0.82rem; }
+  .phrase-card .phrase-de { font-size: 0.84rem; }
+  .data-table { font-size: 0.8rem; }
+  .hero-title { font-size: 2rem; }
+  .stat-num { font-size: 1.6rem; }
 }
 
 /* ── NEW v1.1 ADDITIONS ── */
@@ -1395,3 +1436,152 @@ body {
 
 /* Verb card in word bank - also show praeteritum toggle hint */
 .verb-card-header { position: relative; }
+
+/* ── PREPOSITIONS ── */
+.prep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+}
+.prep-card {
+  background: var(--bg-hover);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--der);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.prep-card.movement { border-left-color: var(--die); }
+.prep-word {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.prep-en { font-size: 0.82rem; color: var(--text-2); font-weight: 600; }
+.prep-ex { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 0.2rem; }
+.prep-note { font-size: 0.72rem; color: var(--text-muted); opacity: 0.7; }
+
+/* ── MODAL CARD ENHANCED ── */
+.modal-card-top { display: flex; flex-direction: column; gap: 0.15rem; margin-bottom: 0.4rem; }
+.modal-function { font-size: 0.75rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.35rem; border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
+.modal-ex + .modal-ex { margin-top: 0.2rem; }
+
+/* ── OPPOSITES GRID ── */
+.opposites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+.opp-pair {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-hover);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.88rem;
+}
+.opp-word { font-weight: 700; flex: 1; }
+.opp-arrow { color: var(--accent); font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+
+/* ── SEPARABLE VERBS ── */
+.sep-rule-block { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
+.sep-example-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.sep-infinitive {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  min-width: 130px;
+}
+.sep-infinitive strong { color: var(--text); }
+.sep-arrow { color: var(--accent); font-weight: 700; font-size: 1rem; }
+.sep-split { font-size: 0.9rem; color: var(--text-2); }
+.sep-base { color: var(--der); font-weight: 700; }
+.sep-prefix { color: var(--accent); font-weight: 700; }
+
+.sep-prefix-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+.sep-prefix-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.45rem 0.7rem;
+  background: var(--bg-hover);
+  border-radius: 8px;
+  font-size: 0.83rem;
+}
+.sep-pfx-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.sep-pfx-badge.sm { font-size: 0.65rem; padding: 1px 5px; }
+.sep-pfx-meaning { color: var(--text-2); }
+.sep-pfx-ex { color: var(--text-muted); font-style: italic; font-size: 0.78rem; }
+
+.sep-table .sep-inf-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-2);
+}
+.sep-pfx-hi {
+  color: var(--accent);
+  font-weight: 700;
+}
+.sep-conj-info { padding: 0.8rem; background: var(--bg-hover); border-radius: 8px; margin-top: 0.6rem; }
+
+/* ── COUNTRIES ── */
+.countries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+}
+.country-group {
+  background: var(--bg-hover);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.country-group-title {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--accent);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.country-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.country-row:last-child { border-bottom: none; }
+.country-de { font-weight: 600; color: var(--text); }
+.country-en { color: var(--text-muted); font-size: 0.8rem; }
+
+/* ── FOOTER CREDIT ── */
+.footer-credit {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
