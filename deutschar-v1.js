@@ -1317,16 +1317,21 @@ function updateDashboard() {
   const total = sectionIndex.length;
   const bm = getBookmarks();
 
+  // Filter to only IDs that still exist in sectionIndex (prune stale localStorage)
+  const validIds = new Set(sectionIndex.map(s => s.id));
+  const validVisited = visited.filter(id => validIds.has(id));
+  const validDone    = done.filter(id => validIds.has(id));
+
   const dashS = document.getElementById('dashSections');
   const dashSBar = document.getElementById('dashSectionsBar');
   const dashD = document.getElementById('dashDone');
   const dashDBar = document.getElementById('dashDoneBar');
   const dashBm = document.getElementById('dashBookmarks');
 
-  if (dashS) dashS.textContent = visited.length;
-  if (dashSBar) dashSBar.style.width = Math.min((visited.length / total) * 100, 100) + '%';
-  if (dashD) dashD.textContent = done.length;
-  if (dashDBar) dashDBar.style.width = Math.min((done.length / total) * 100, 100) + '%';
+  if (dashS) dashS.textContent = validVisited.length;
+  if (dashSBar) dashSBar.style.width = Math.min((validVisited.length / total) * 100, 100) + '%';
+  if (dashD) dashD.textContent = validDone.length;
+  if (dashDBar) dashDBar.style.width = Math.min((validDone.length / total) * 100, 100) + '%';
   if (dashBm) dashBm.textContent = bm.length;
 }
 
