@@ -1,5 +1,5 @@
 /* ============================================================
-   DeutschAR.EDU v1.0 — JavaScript
+   DeutschAR.EDU v2.0 — JavaScript
    Author: AR
 ============================================================ */
 
@@ -1687,5 +1687,5 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
-console.log('%cDeutschAR.EDU v1.0 — Made by Abdelrahman Mohamed', 'color:#F0C233;font-weight:bold;font-size:14px;');
+console.log('%cDeutschAR.EDU v2.0 — Made by Abdelrahman Mohamed', 'color:#F0C233;font-weight:bold;font-size:14px;');
 
