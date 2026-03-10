@@ -319,6 +319,49 @@ const wordBank = {
     },
   ],
 
+  separable: [
+    { infinitive: "anrufen",      prefix: "an",      english: "to call (phone)",             example: "Ich rufe dich an." },
+    { infinitive: "aufräumen",    prefix: "auf",     english: "to tidy up / clean",          example: "Er räumt sein Zimmer auf." },
+    { infinitive: "aufstehen",    prefix: "auf",     english: "to get up / stand up",        example: "Ich stehe um 7 Uhr auf." },
+    { infinitive: "aufmachen",    prefix: "auf",     english: "to open",                     example: "Mach bitte das Fenster auf." },
+    { infinitive: "aufhören",     prefix: "auf",     english: "to stop / quit",              example: "Hör auf zu reden!" },
+    { infinitive: "aufwachen",    prefix: "auf",     english: "to wake up",                  example: "Ich wache früh auf." },
+    { infinitive: "aufschreiben", prefix: "auf",     english: "to write down / note",        example: "Schreib das auf!" },
+    { infinitive: "anfangen",     prefix: "an",      english: "to begin / start",            example: "Wann fängt der Film an?" },
+    { infinitive: "anziehen",     prefix: "an",      english: "to put on (clothes)",         example: "Ich ziehe meinen Mantel an." },
+    { infinitive: "ankommen",     prefix: "an",      english: "to arrive",                   example: "Wir kommen um 18 Uhr an." },
+    { infinitive: "ansehen",      prefix: "an",      english: "to look at / watch",          example: "Sieh mich an!" },
+    { infinitive: "anschalten",   prefix: "an",      english: "to turn on / switch on",      example: "Schalte den Fernseher an." },
+    { infinitive: "anbieten",     prefix: "an",      english: "to offer",                    example: "Er bietet mir Hilfe an." },
+    { infinitive: "ausziehen",    prefix: "aus",     english: "to take off (clothes) / move out", example: "Er zieht seine Jacke aus." },
+    { infinitive: "ausgehen",     prefix: "aus",     english: "to go out",                   example: "Wir gehen heute Abend aus." },
+    { infinitive: "ausmachen",    prefix: "aus",     english: "to turn off / switch off",    example: "Mach das Licht aus!" },
+    { infinitive: "aussteigen",   prefix: "aus",     english: "to get out / exit",           example: "Wo steigen wir aus?" },
+    { infinitive: "einkaufen",    prefix: "ein",     english: "to go shopping",              example: "Ich kaufe im Supermarkt ein." },
+    { infinitive: "einladen",     prefix: "ein",     english: "to invite",                   example: "Ich lade dich ein." },
+    { infinitive: "einsteigen",   prefix: "ein",     english: "to get in / board",           example: "Steig schnell ein!" },
+    { infinitive: "einschlafen",  prefix: "ein",     english: "to fall asleep",              example: "Das Baby schläft ein." },
+    { infinitive: "abfahren",     prefix: "ab",      english: "to depart / leave",           example: "Der Zug fährt um 9 ab." },
+    { infinitive: "abnehmen",     prefix: "ab",      english: "to lose weight / take off",   example: "Ich möchte abnehmen." },
+    { infinitive: "abgeben",      prefix: "ab",      english: "to hand in / drop off",       example: "Ich gebe die Hausaufgaben ab." },
+    { infinitive: "abholen",      prefix: "ab",      english: "to pick up / collect",        example: "Ich hole dich vom Bahnhof ab." },
+    { infinitive: "mitkommen",    prefix: "mit",     english: "to come along",               example: "Kommst du mit?" },
+    { infinitive: "mitnehmen",    prefix: "mit",     english: "to take along / bring",       example: "Kann ich das mitnehmen?" },
+    { infinitive: "vorstellen",   prefix: "vor",     english: "to introduce / imagine",      example: "Ich stelle mich vor." },
+    { infinitive: "vorhaben",     prefix: "vor",     english: "to plan / intend",            example: "Was hast du vor?" },
+    { infinitive: "vorbereiten",  prefix: "vor",     english: "to prepare",                  example: "Ich bereite das Essen vor." },
+    { infinitive: "zurückkommen", prefix: "zurück",  english: "to come back / return",       example: "Wann kommst du zurück?" },
+    { infinitive: "zurückgeben",  prefix: "zurück",  english: "to give back",                example: "Gib mir das Buch zurück!" },
+    { infinitive: "umziehen",     prefix: "um",      english: "to move (home) / change clothes", example: "Wir ziehen nach Berlin um." },
+    { infinitive: "umsteigen",    prefix: "um",      english: "to transfer / change (transport)", example: "Hier müssen wir umsteigen." },
+    { infinitive: "weitergehen",  prefix: "weiter",  english: "to continue / keep going",    example: "Gehen wir weiter!" },
+    { infinitive: "weitermachen", prefix: "weiter",  english: "to carry on / continue",      example: "Mach weiter!" },
+    { infinitive: "hereingehen",  prefix: "her",     english: "to come in / enter",          example: "Bitte gehen Sie herein." },
+    { infinitive: "hinsetzen",    prefix: "hin",     english: "to sit down / place",         example: "Setz dich hin!" },
+    { infinitive: "hinlegen",     prefix: "hin",     english: "to lay down / put down",      example: "Leg das Buch hin." },
+    { infinitive: "zunehmen",     prefix: "zu",      english: "to gain weight / increase",   example: "Er hat zugenommen." },
+  ],
+
   adjectives: [
     // Level 1 — Most common (with opposites)
     { german: "gut",        english: "good",         comparative: "besser",      superlative: "am besten",       opposite: "schlecht", level: 1 },
@@ -614,6 +657,11 @@ function runSearch() {
         results.push({ type: 'verb', de: v.infinitive, en: v.english, extra: `${v.type} · ich: ${v.conjugations['ich']}, er: ${v.conjugations['er/sie/es']}` });
       }
     });
+    wordBank.separable.forEach(v => {
+      if (v.infinitive.toLowerCase().includes(q) || v.english.toLowerCase().includes(q)) {
+        results.push({ type: 'separable verb', de: v.infinitive, en: v.english, extra: `prefix: ${v.prefix}- · ${v.example}` });
+      }
+    });
   }
   if (currentFilter === 'all' || currentFilter === 'adjectives') {
     wordBank.adjectives.forEach(a => {
@@ -714,6 +762,30 @@ function conjugate() {
   if (!q) { result.innerHTML = ''; return; }
 
   const verb = wordBank.verbs.find(v => v.infinitive.toLowerCase() === q);
+  const sepVerb = wordBank.separable.find(v => v.infinitive.toLowerCase() === q);
+
+  if (!verb && sepVerb) {
+    result.innerHTML = `
+      <div class="conj-result-card">
+        <div class="conj-result-header">
+          <div>
+            <div class="conj-result-verb">${sepVerb.infinitive}</div>
+            <div class="conj-result-en">${sepVerb.english}</div>
+          </div>
+          <span class="verb-type" style="background:var(--accent);color:#000">separable</span>
+        </div>
+        <div class="sep-conj-info">
+          <p>This is a <strong>separable verb</strong> — prefix <span class="mono">${sepVerb.prefix}-</span> splits off to the end.</p>
+          <div class="sep-example-row" style="margin-top:.6rem">
+            <span class="sep-infinitive">${sepVerb.prefix}<strong>${sepVerb.infinitive.slice(sepVerb.prefix.length)}</strong></span>
+            <span class="sep-arrow">→</span>
+            <span class="sep-split" style="font-style:italic">${sepVerb.example}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
 
   if (!verb) {
     result.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;padding:1rem 0">Verb "<strong>${q}</strong>" not found in the word bank yet. More verbs coming soon!</p>`;
@@ -759,6 +831,51 @@ function conjugate() {
 }
 
 // ═══════════════════════════════════════
+// OPPOSITES EXPLORER
+// ═══════════════════════════════════════
+function renderOpposites() {
+  const adjGrid = document.getElementById('adjOppositeGrid');
+  const nounGrid = document.getElementById('nounOppositeGrid');
+  if (!adjGrid || !nounGrid) return;
+
+  const seen = new Set();
+  const adjPairs = [];
+  wordBank.adjectives.forEach(a => {
+    if (!a.opposite) return;
+    const key = [a.german, a.opposite].sort().join('|');
+    if (!seen.has(key)) { seen.add(key); adjPairs.push([a.german, a.opposite]); }
+  });
+
+  const seenN = new Set();
+  const nounPairs = [];
+  wordBank.nouns.forEach(n => {
+    if (!n.opposite) return;
+    const key = [n.german, n.opposite].sort().join('|');
+    if (!seenN.has(key)) { seenN.add(key); nounPairs.push([n.german, n.opposite]); }
+  });
+
+  adjGrid.innerHTML = adjPairs.map(([a, b]) => `
+    <div class="opp-pair">
+      <span class="opp-word">${a}</span>
+      <span class="opp-arrow">↔</span>
+      <span class="opp-word">${b}</span>
+    </div>
+  `).join('');
+
+  nounGrid.innerHTML = nounPairs.map(([a, b]) => {
+    const na = wordBank.nouns.find(n => n.german === a);
+    const nb = wordBank.nouns.find(n => n.german === b);
+    return `
+    <div class="opp-pair">
+      <span class="opp-word ${na ? na.article+'-text' : ''}">${na ? na.article+' ' : ''}${a}</span>
+      <span class="opp-arrow">↔</span>
+      <span class="opp-word ${nb ? nb.article+'-text' : ''}">${nb ? nb.article+' ' : ''}${b}</span>
+    </div>
+  `}).join('');
+}
+renderOpposites();
+
+// ═══════════════════════════════════════
 // SIDEBAR SEARCH
 // ═══════════════════════════════════════
 document.getElementById('sidebarSearch').addEventListener('input', function() {
@@ -771,4 +888,4 @@ document.getElementById('sidebarSearch').addEventListener('input', function() {
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
-console.log('%cDeutschAR.EDU v1.0 — Built by AR', 'color:#F0C233;font-weight:bold;font-size:14px;');
+console.log('%cDeutschAR.EDU v1.0 — Made by Abdelrahman Mohamed', 'color:#F0C233;font-weight:bold;font-size:14px;');
