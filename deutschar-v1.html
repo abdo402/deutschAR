@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeutschAR.EDU — Learn German</title>
+  <meta name="author" content="AR">
+  <meta name="description" content="A modern, interactive German learning encyclopedia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="deutschar-v1.css">
+</head>
+<body>
+
+  <!-- MOBILE OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <span class="logo-text">Deutsch</span><span class="logo-ar">AR</span><span class="logo-edu">.EDU</span>
+      </div>
+      <button class="sidebar-close" id="sidebarClose">✕</button>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebarSearch" placeholder="Search words, topics..." autocomplete="off">
+      <span class="search-icon">⌕</span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <a href="#hero" class="nav-home active" data-section="hero">
+        <span class="nav-icon">⌂</span> Home
+      </a>
+
+      <div class="nav-chapter" data-chapter="1">
+        <button class="chapter-toggle">
+          <span class="chapter-num">01</span>
+          <span class="chapter-title">Grundlagen <em>Basics</em></span>
+          <span class="chapter-arrow">›</span>
+        </button>
+        <div class="chapter-items open">
+          <a href="#alphabet-section" class="nav-item" data-section="alphabet-section">Alphabet & Pronunciation</a>
+          <a href="#numbers-section" class="nav-item" data-section="numbers-section">Numbers — Zahlen</a>
+          <a href="#greetings-section" class="nav-item" data-section="greetings-section">Greetings — Begrüßungen</a>
+          <a href="#colors-section" class="nav-item" data-section="colors-section">Colors — Farben</a>
+          <a href="#days-section" class="nav-item" data-section="days-section">Days & Months</a>
+        </div>
+      </div>
+
+      <div class="nav-chapter" data-chapter="2">
+        <button class="chapter-toggle">
+          <span class="chapter-num">02</span>
+          <span class="chapter-title">Grammatik <em>Grammar</em></span>
+          <span class="chapter-arrow">›</span>
+        </button>
+        <div class="chapter-items open">
+          <a href="#articles-section" class="nav-item" data-section="articles-section">Articles — der / die / das</a>
+          <a href="#cases-section" class="nav-item" data-section="cases-section">Cases — Die Fälle</a>
+          <a href="#conjugation-section" class="nav-item" data-section="conjugation-section">Verb Conjugation</a>
+          <a href="#modal-section" class="nav-item" data-section="modal-section">Modal Verbs</a>
+          <a href="#wordorder-section" class="nav-item" data-section="wordorder-section">Word Order</a>
+          <a href="#adjectives-grammar-section" class="nav-item" data-section="adjectives-grammar-section">Adjective Endings</a>
+        </div>
+      </div>
+
+      <div class="nav-chapter" data-chapter="3">
+        <button class="chapter-toggle">
+          <span class="chapter-num">03</span>
+          <span class="chapter-title">Wortschatz <em>Vocabulary</em></span>
+          <span class="chapter-arrow">›</span>
+        </button>
+        <div class="chapter-items open">
+          <a href="#nouns-section" class="nav-item" data-section="nouns-section">Nouns — Nomen</a>
+          <a href="#verbs-section" class="nav-item" data-section="verbs-section">Verbs — Verben</a>
+          <a href="#adj-section" class="nav-item" data-section="adj-section">Adjectives — Adjektive</a>
+        </div>
+      </div>
+
+      <div class="nav-chapter" data-chapter="4">
+        <button class="chapter-toggle">
+          <span class="chapter-num">04</span>
+          <span class="chapter-title">Werkzeuge <em>Tools</em></span>
+          <span class="chapter-arrow">›</span>
+        </button>
+        <div class="chapter-items open">
+          <a href="#wordsearch-section" class="nav-item" data-section="wordsearch-section">Word Search</a>
+          <a href="#genderquiz-section" class="nav-item" data-section="genderquiz-section">Gender Quiz</a>
+          <a href="#verbconjugator-section" class="nav-item" data-section="verbconjugator-section">Verb Conjugator</a>
+        </div>
+      </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <span>DeutschAR.EDU © 2025</span>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-logo">
+        <span class="logo-text">Deutsch</span><span class="logo-ar">AR</span><span class="logo-edu">.EDU</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+          <span class="theme-icon-dark">☾</span>
+          <span class="theme-icon-light">☀</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content" id="content">
+
+      <!-- ═══════════════════════════════════════
+           HERO
+      ═══════════════════════════════════════ -->
+      <section id="hero" class="hero-section">
+        <div class="hero-flag">
+          <div class="flag-stripe black"></div>
+          <div class="flag-stripe red"></div>
+          <div class="flag-stripe gold"></div>
+        </div>
+        <div class="hero-content">
+          <p class="hero-eyebrow">Willkommen — Welcome</p>
+          <h1 class="hero-title">
+            Learn German<br>
+            <em>the right way</em>
+          </h1>
+          <p class="hero-subtitle">
+            A modern encyclopedia for learning German — from your first <em>Hallo</em> to complex grammar, vocabulary, and beyond.
+          </p>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-num" id="statSections">17</span>
+              <span class="stat-label">Topics</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" id="statWords">150+</span>
+              <span class="stat-label">Words</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" id="statTools">3</span>
+              <span class="stat-label">Tools</span>
+            </div>
+          </div>
+          <div class="gender-legend">
+            <span class="gender-badge der">der</span>
+            <span class="gender-badge die">die</span>
+            <span class="gender-badge das">das</span>
+            <span class="legend-note">Article color coding used throughout</span>
+          </div>
+        </div>
+        <div class="hero-decoration">
+          <div class="deco-circle c1"></div>
+          <div class="deco-circle c2"></div>
+          <div class="deco-word w1">Hallo</div>
+          <div class="deco-word w2">Danke</div>
+          <div class="deco-word w3">Schön</div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 1: BASICS
+      ═══════════════════════════════════════ -->
+      <div class="chapter-divider">
+        <span class="ch-num">01</span>
+        <span class="ch-label">Grundlagen — Basics</span>
+      </div>
+
+      <!-- ALPHABET -->
+      <section id="alphabet-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Basics</span>
+            <h2 class="card-title">Alphabet & Pronunciation</h2>
+            <p class="card-subtitle">Das Alphabet — 26 letters + 4 special characters</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>The German alphabet has the same 26 letters as English, plus <strong>4 special characters</strong> unique to German: <span class="highlight">ä, ö, ü</span> (called Umlauts) and <span class="highlight">ß</span> (Eszett/sharp S).</p>
+          </div>
+          <div class="alphabet-grid">
+            <div class="alpha-card">
+              <span class="alpha-letter">Ä ä</span>
+              <span class="alpha-sound">"eh" — like in "bed"</span>
+              <span class="alpha-example">ähnlich (similar)</span>
+            </div>
+            <div class="alpha-card">
+              <span class="alpha-letter">Ö ö</span>
+              <span class="alpha-sound">"uh" — rounded lips</span>
+              <span class="alpha-example">öffnen (to open)</span>
+            </div>
+            <div class="alpha-card">
+              <span class="alpha-letter">Ü ü</span>
+              <span class="alpha-sound">"ee" — rounded lips</span>
+              <span class="alpha-example">über (over/above)</span>
+            </div>
+            <div class="alpha-card">
+              <span class="alpha-letter">ß</span>
+              <span class="alpha-sound">"ss" — sharp S</span>
+              <span class="alpha-example">Straße (street)</span>
+            </div>
+          </div>
+          <div class="pronunciation-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Letter</th><th>German Name</th><th>Sound (approx.)</th><th>Example</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono">A a</td><td>Ah</td><td>like "ah"</td><td>Auto (car)</td></tr>
+                <tr><td class="mono">B b</td><td>Beh</td><td>like English B</td><td>Buch (book)</td></tr>
+                <tr><td class="mono">C c</td><td>Tseh</td><td>"ts" or "k"</td><td>Café</td></tr>
+                <tr><td class="mono">D d</td><td>Deh</td><td>like English D</td><td>Deutsch (German)</td></tr>
+                <tr><td class="mono">E e</td><td>Eh</td><td>like "ay"</td><td>Essen (food/to eat)</td></tr>
+                <tr><td class="mono">F f</td><td>Eff</td><td>like English F</td><td>Frau (woman)</td></tr>
+                <tr><td class="mono">G g</td><td>Geh</td><td>hard G</td><td>gut (good)</td></tr>
+                <tr><td class="mono">H h</td><td>Hah</td><td>aspirated H</td><td>Haus (house)</td></tr>
+                <tr><td class="mono">I i</td><td>Ih</td><td>like "ee"</td><td>ich (I)</td></tr>
+                <tr><td class="mono">J j</td><td>Yot</td><td>like English Y</td><td>Jahr (year)</td></tr>
+                <tr><td class="mono">K k</td><td>Kah</td><td>like English K</td><td>Kind (child)</td></tr>
+                <tr><td class="mono">L l</td><td>Ell</td><td>like English L</td><td>Licht (light)</td></tr>
+                <tr><td class="mono">M m</td><td>Emm</td><td>like English M</td><td>Mann (man)</td></tr>
+                <tr><td class="mono">N n</td><td>Enn</td><td>like English N</td><td>Nacht (night)</td></tr>
+                <tr><td class="mono">O o</td><td>Oh</td><td>like "oh"</td><td>Ort (place)</td></tr>
+                <tr><td class="mono">P p</td><td>Peh</td><td>like English P</td><td>Post (mail)</td></tr>
+                <tr><td class="mono">Q q</td><td>Kuh</td><td>"kv" sound</td><td>Quelle (source)</td></tr>
+                <tr><td class="mono">R r</td><td>Err</td><td>guttural R</td><td>rot (red)</td></tr>
+                <tr><td class="mono">S s</td><td>Ess</td><td>"z" before vowel, "s" after</td><td>Sonne (sun)</td></tr>
+                <tr><td class="mono">T t</td><td>Teh</td><td>like English T</td><td>Tag (day)</td></tr>
+                <tr><td class="mono">U u</td><td>Uh</td><td>like "oo"</td><td>und (and)</td></tr>
+                <tr><td class="mono">V v</td><td>Fau</td><td>"f" sound</td><td>Vater (father)</td></tr>
+                <tr><td class="mono">W w</td><td>Veh</td><td>"v" sound</td><td>Wasser (water)</td></tr>
+                <tr><td class="mono">X x</td><td>Iks</td><td>"ks" sound</td><td>Xylophon</td></tr>
+                <tr><td class="mono">Y y</td><td>Ypsilon</td><td>like "ü"</td><td>Yoga</td></tr>
+                <tr><td class="mono">Z z</td><td>Tsett</td><td>"ts" sound</td><td>Zeit (time)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p><strong>Key rule:</strong> German is phonetic — once you learn the sounds, you can pronounce any word you read!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- NUMBERS -->
+      <section id="numbers-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Basics</span>
+            <h2 class="card-title">Numbers — Zahlen</h2>
+            <p class="card-subtitle">Cardinal and ordinal numbers</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Cardinal Numbers (1–20)</h3>
+              <div class="number-grid">
+                <div class="num-item"><span class="num">1</span><span class="de">eins</span></div>
+                <div class="num-item"><span class="num">2</span><span class="de">zwei</span></div>
+                <div class="num-item"><span class="num">3</span><span class="de">drei</span></div>
+                <div class="num-item"><span class="num">4</span><span class="de">vier</span></div>
+                <div class="num-item"><span class="num">5</span><span class="de">fünf</span></div>
+                <div class="num-item"><span class="num">6</span><span class="de">sechs</span></div>
+                <div class="num-item"><span class="num">7</span><span class="de">sieben</span></div>
+                <div class="num-item"><span class="num">8</span><span class="de">acht</span></div>
+                <div class="num-item"><span class="num">9</span><span class="de">neun</span></div>
+                <div class="num-item"><span class="num">10</span><span class="de">zehn</span></div>
+                <div class="num-item"><span class="num">11</span><span class="de">elf</span></div>
+                <div class="num-item"><span class="num">12</span><span class="de">zwölf</span></div>
+                <div class="num-item"><span class="num">13</span><span class="de">dreizehn</span></div>
+                <div class="num-item"><span class="num">14</span><span class="de">vierzehn</span></div>
+                <div class="num-item"><span class="num">15</span><span class="de">fünfzehn</span></div>
+                <div class="num-item"><span class="num">16</span><span class="de">sechzehn</span></div>
+                <div class="num-item"><span class="num">17</span><span class="de">siebzehn</span></div>
+                <div class="num-item"><span class="num">18</span><span class="de">achtzehn</span></div>
+                <div class="num-item"><span class="num">19</span><span class="de">neunzehn</span></div>
+                <div class="num-item"><span class="num">20</span><span class="de">zwanzig</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Tens & Hundreds</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">dreißig</span><span class="en">30</span></div>
+                <div class="vocab-row"><span class="de">vierzig</span><span class="en">40</span></div>
+                <div class="vocab-row"><span class="de">fünfzig</span><span class="en">50</span></div>
+                <div class="vocab-row"><span class="de">sechzig</span><span class="en">60</span></div>
+                <div class="vocab-row"><span class="de">siebzig</span><span class="en">70</span></div>
+                <div class="vocab-row"><span class="de">achtzig</span><span class="en">80</span></div>
+                <div class="vocab-row"><span class="de">neunzig</span><span class="en">90</span></div>
+                <div class="vocab-row"><span class="de">hundert</span><span class="en">100</span></div>
+                <div class="vocab-row"><span class="de">tausend</span><span class="en">1,000</span></div>
+                <div class="vocab-row"><span class="de">eine Million</span><span class="en">1,000,000</span></div>
+              </div>
+              <div class="tip-block">
+                <span class="tip-icon">💡</span>
+                <p>Numbers 21–99: say the ones digit first + <em>und</em> + tens. Example: <strong>einundzwanzig</strong> (21)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GREETINGS -->
+      <section id="greetings-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Basics</span>
+            <h2 class="card-title">Greetings — Begrüßungen</h2>
+            <p class="card-subtitle">Essential phrases for every situation</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Formal Greetings</h3>
+              <div class="phrase-list">
+                <div class="phrase-card">
+                  <span class="phrase-de">Guten Morgen</span>
+                  <span class="phrase-en">Good morning</span>
+                  <span class="phrase-note">Until ~10am</span>
+                </div>
+                <div class="phrase-card">
+                  <span class="phrase-de">Guten Tag</span>
+                  <span class="phrase-en">Good day / Hello</span>
+                  <span class="phrase-note">Daytime</span>
+                </div>
+                <div class="phrase-card">
+                  <span class="phrase-de">Guten Abend</span>
+                  <span class="phrase-en">Good evening</span>
+                  <span class="phrase-note">After 6pm</span>
+                </div>
+                <div class="phrase-card">
+                  <span class="phrase-de">Auf Wiedersehen</span>
+                  <span class="phrase-en">Goodbye (formal)</span>
+                  <span class="phrase-note">Lit: "Until we see again"</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Informal Greetings</h3>
+              <div class="phrase-list">
+                <div class="phrase-card informal">
+                  <span class="phrase-de">Hallo</span>
+                  <span class="phrase-en">Hello / Hi</span>
+                  <span class="phrase-note">Universal informal</span>
+                </div>
+                <div class="phrase-card informal">
+                  <span class="phrase-de">Hi / Hey</span>
+                  <span class="phrase-en">Hi / Hey</span>
+                  <span class="phrase-note">Very casual</span>
+                </div>
+                <div class="phrase-card informal">
+                  <span class="phrase-de">Tschüss</span>
+                  <span class="phrase-en">Bye</span>
+                  <span class="phrase-note">Most common farewell</span>
+                </div>
+                <div class="phrase-card informal">
+                  <span class="phrase-de">Bis später!</span>
+                  <span class="phrase-en">See you later!</span>
+                  <span class="phrase-note"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Essential Polite Phrases</h3>
+          <div class="phrase-grid">
+            <div class="pg-item"><span class="de">Bitte</span><span class="en">Please / You're welcome</span></div>
+            <div class="pg-item"><span class="de">Danke</span><span class="en">Thank you</span></div>
+            <div class="pg-item"><span class="de">Danke schön</span><span class="en">Thank you very much</span></div>
+            <div class="pg-item"><span class="de">Bitte schön</span><span class="en">You're very welcome</span></div>
+            <div class="pg-item"><span class="de">Entschuldigung</span><span class="en">Excuse me / Sorry</span></div>
+            <div class="pg-item"><span class="de">Es tut mir leid</span><span class="en">I'm sorry</span></div>
+            <div class="pg-item"><span class="de">Wie geht es Ihnen?</span><span class="en">How are you? (formal)</span></div>
+            <div class="pg-item"><span class="de">Wie geht's?</span><span class="en">How are you? (informal)</span></div>
+            <div class="pg-item"><span class="de">Mir geht es gut</span><span class="en">I'm doing well</span></div>
+            <div class="pg-item"><span class="de">Ich verstehe nicht</span><span class="en">I don't understand</span></div>
+            <div class="pg-item"><span class="de">Sprechen Sie Englisch?</span><span class="en">Do you speak English?</span></div>
+            <div class="pg-item"><span class="de">Ich lerne Deutsch</span><span class="en">I'm learning German</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLORS -->
+      <section id="colors-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Basics</span>
+            <h2 class="card-title">Colors — Farben</h2>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="colors-grid">
+            <div class="color-item" style="--c:#FF4444"><span class="color-swatch"></span><span class="de">rot</span><span class="en">red</span></div>
+            <div class="color-item" style="--c:#4488FF"><span class="color-swatch"></span><span class="de">blau</span><span class="en">blue</span></div>
+            <div class="color-item" style="--c:#44BB44"><span class="color-swatch"></span><span class="de">grün</span><span class="en">green</span></div>
+            <div class="color-item" style="--c:#F0C233"><span class="color-swatch"></span><span class="de">gelb</span><span class="en">yellow</span></div>
+            <div class="color-item" style="--c:#FF8800"><span class="color-swatch"></span><span class="de">orange</span><span class="en">orange</span></div>
+            <div class="color-item" style="--c:#9B59B6"><span class="color-swatch"></span><span class="de">lila</span><span class="en">purple</span></div>
+            <div class="color-item" style="--c:#E91E8C"><span class="color-swatch"></span><span class="de">rosa</span><span class="en">pink</span></div>
+            <div class="color-item" style="--c:#8B4513"><span class="color-swatch"></span><span class="de">braun</span><span class="en">brown</span></div>
+            <div class="color-item" style="--c:#1A1A1A; outline:1px solid #555"><span class="color-swatch"></span><span class="de">schwarz</span><span class="en">black</span></div>
+            <div class="color-item" style="--c:#FFFFFF; outline:1px solid #555"><span class="color-swatch"></span><span class="de">weiß</span><span class="en">white</span></div>
+            <div class="color-item" style="--c:#888888"><span class="color-swatch"></span><span class="de">grau</span><span class="en">grey</span></div>
+            <div class="color-item" style="--c:#87CEEB"><span class="color-swatch"></span><span class="de">hellblau</span><span class="en">light blue</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAYS & MONTHS -->
+      <section id="days-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Basics</span>
+            <h2 class="card-title">Days & Months — Tage & Monate</h2>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Days of the Week — Wochentage</h3>
+              <div class="vocab-list">
+                <div class="vocab-row accent"><span class="de">Montag</span><span class="en">Monday</span></div>
+                <div class="vocab-row"><span class="de">Dienstag</span><span class="en">Tuesday</span></div>
+                <div class="vocab-row accent"><span class="de">Mittwoch</span><span class="en">Wednesday</span></div>
+                <div class="vocab-row"><span class="de">Donnerstag</span><span class="en">Thursday</span></div>
+                <div class="vocab-row accent"><span class="de">Freitag</span><span class="en">Friday</span></div>
+                <div class="vocab-row highlight-row"><span class="de">Samstag</span><span class="en">Saturday</span></div>
+                <div class="vocab-row highlight-row"><span class="de">Sonntag</span><span class="en">Sunday</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Months — Monate</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">Januar</span><span class="en">January</span></div>
+                <div class="vocab-row"><span class="de">Februar</span><span class="en">February</span></div>
+                <div class="vocab-row"><span class="de">März</span><span class="en">March</span></div>
+                <div class="vocab-row"><span class="de">April</span><span class="en">April</span></div>
+                <div class="vocab-row"><span class="de">Mai</span><span class="en">May</span></div>
+                <div class="vocab-row"><span class="de">Juni</span><span class="en">June</span></div>
+                <div class="vocab-row"><span class="de">Juli</span><span class="en">July</span></div>
+                <div class="vocab-row"><span class="de">August</span><span class="en">August</span></div>
+                <div class="vocab-row"><span class="de">September</span><span class="en">September</span></div>
+                <div class="vocab-row"><span class="de">Oktober</span><span class="en">October</span></div>
+                <div class="vocab-row"><span class="de">November</span><span class="en">November</span></div>
+                <div class="vocab-row"><span class="de">Dezember</span><span class="en">December</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 2: GRAMMAR
+      ═══════════════════════════════════════ -->
+      <div class="chapter-divider">
+        <span class="ch-num">02</span>
+        <span class="ch-label">Grammatik — Grammar</span>
+      </div>
+
+      <!-- ARTICLES -->
+      <section id="articles-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Articles — der / die / das</h2>
+            <p class="card-subtitle">Every German noun has a grammatical gender</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="gender-cards">
+            <div class="gender-card der-card">
+              <span class="gc-article">der</span>
+              <span class="gc-label">Masculine</span>
+              <div class="gc-examples">
+                <span>der Mann (man)</span>
+                <span>der Hund (dog)</span>
+                <span>der Tisch (table)</span>
+                <span>der Vater (father)</span>
+              </div>
+              <div class="gc-tips">
+                <p><strong>Common endings:</strong> -er, -en, -el, -ling, -ig, -ismus</p>
+              </div>
+            </div>
+            <div class="gender-card die-card">
+              <span class="gc-article">die</span>
+              <span class="gc-label">Feminine</span>
+              <div class="gc-examples">
+                <span>die Frau (woman)</span>
+                <span>die Katze (cat)</span>
+                <span>die Schule (school)</span>
+                <span>die Mutter (mother)</span>
+              </div>
+              <div class="gc-tips">
+                <p><strong>Common endings:</strong> -ung, -heit, -keit, -schaft, -tion, -tät, -e</p>
+              </div>
+            </div>
+            <div class="gender-card das-card">
+              <span class="gc-article">das</span>
+              <span class="gc-label">Neuter</span>
+              <div class="gc-examples">
+                <span>das Kind (child)</span>
+                <span>das Buch (book)</span>
+                <span>das Auto (car)</span>
+                <span>das Haus (house)</span>
+              </div>
+              <div class="gc-tips">
+                <p><strong>Common endings:</strong> -chen, -lein, -tum, -um, -ment, -nis</p>
+              </div>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">⚠️</span>
+            <p>The article changes in the plural — <strong>all genders use "die"</strong> for plural: <em>die Männer, die Frauen, die Kinder</em></p>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Definite vs Indefinite Articles</h3>
+          <table class="data-table">
+            <thead><tr><th>Gender</th><th>Definite (the)</th><th>Indefinite (a/an)</th><th>Negative (no/not a)</th></tr></thead>
+            <tbody>
+              <tr><td class="der-text">Masculine</td><td class="der-text">der Mann</td><td>ein Mann</td><td>kein Mann</td></tr>
+              <tr><td class="die-text">Feminine</td><td class="die-text">die Frau</td><td>eine Frau</td><td>keine Frau</td></tr>
+              <tr><td class="das-text">Neuter</td><td class="das-text">das Kind</td><td>ein Kind</td><td>kein Kind</td></tr>
+              <tr><td>Plural (all)</td><td>die (Männer)</td><td>— (no article)</td><td>keine (Männer)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CASES -->
+      <section id="cases-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Cases — Die Fälle</h2>
+            <p class="card-subtitle">German has 4 grammatical cases that affect article endings</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="cases-overview">
+            <div class="case-block">
+              <span class="case-name">Nominativ</span>
+              <span class="case-role">Subject — who does the action</span>
+              <span class="case-example"><em>Der Mann</em> kauft Brot. (The man buys bread.)</span>
+            </div>
+            <div class="case-block">
+              <span class="case-name">Akkusativ</span>
+              <span class="case-role">Direct object — what receives the action</span>
+              <span class="case-example">Der Mann kauft <em>den Hund</em>. (The man buys the dog.)</span>
+            </div>
+            <div class="case-block">
+              <span class="case-name">Dativ</span>
+              <span class="case-role">Indirect object — to whom / for whom</span>
+              <span class="case-example">Ich gebe <em>dem Mann</em> das Buch. (I give the man the book.)</span>
+            </div>
+            <div class="case-block">
+              <span class="case-name">Genitiv</span>
+              <span class="case-role">Possession — of whom / whose</span>
+              <span class="case-example">Das Buch <em>des Mannes</em>. (The man's book.)</span>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Definite Article Declension</h3>
+          <table class="data-table">
+            <thead><tr><th>Case</th><th class="der-text">Masculine</th><th class="die-text">Feminine</th><th class="das-text">Neuter</th><th>Plural</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Nominativ</strong></td><td class="der-text">der</td><td class="die-text">die</td><td class="das-text">das</td><td>die</td></tr>
+              <tr><td><strong>Akkusativ</strong></td><td class="der-text">den</td><td class="die-text">die</td><td class="das-text">das</td><td>die</td></tr>
+              <tr><td><strong>Dativ</strong></td><td class="der-text">dem</td><td class="die-text">der</td><td class="das-text">dem</td><td>den</td></tr>
+              <tr><td><strong>Genitiv</strong></td><td class="der-text">des</td><td class="die-text">der</td><td class="das-text">des</td><td>der</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VERB CONJUGATION -->
+      <section id="conjugation-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Verb Conjugation — Konjugation</h2>
+            <p class="card-subtitle">Present tense (Präsens) regular & irregular verbs</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>German verbs change their ending based on the subject pronoun. Regular verbs follow a predictable pattern; irregular (strong) verbs have vowel changes in their stem.</p>
+          </div>
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Regular Verb: <em>machen</em> (to do/make)</h3>
+              <table class="conj-table">
+                <thead><tr><th>Pronoun</th><th>Form</th><th>Meaning</th></tr></thead>
+                <tbody>
+                  <tr><td class="pronoun">ich</td><td class="conj-form">mache</td><td>I do</td></tr>
+                  <tr><td class="pronoun">du</td><td class="conj-form">machst</td><td>you do</td></tr>
+                  <tr><td class="pronoun">er / sie / es</td><td class="conj-form">macht</td><td>he/she/it does</td></tr>
+                  <tr><td class="pronoun">wir</td><td class="conj-form">machen</td><td>we do</td></tr>
+                  <tr><td class="pronoun">ihr</td><td class="conj-form">macht</td><td>you all do</td></tr>
+                  <tr><td class="pronoun">sie / Sie</td><td class="conj-form">machen</td><td>they/you (formal) do</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h3 class="sub-heading">Irregular Verb: <em>sein</em> (to be)</h3>
+              <table class="conj-table">
+                <thead><tr><th>Pronoun</th><th>Form</th><th>Meaning</th></tr></thead>
+                <tbody>
+                  <tr><td class="pronoun">ich</td><td class="conj-form irregular">bin</td><td>I am</td></tr>
+                  <tr><td class="pronoun">du</td><td class="conj-form irregular">bist</td><td>you are</td></tr>
+                  <tr><td class="pronoun">er / sie / es</td><td class="conj-form irregular">ist</td><td>he/she/it is</td></tr>
+                  <tr><td class="pronoun">wir</td><td class="conj-form irregular">sind</td><td>we are</td></tr>
+                  <tr><td class="pronoun">ihr</td><td class="conj-form irregular">seid</td><td>you all are</td></tr>
+                  <tr><td class="pronoun">sie / Sie</td><td class="conj-form irregular">sind</td><td>they/you (formal) are</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p><strong>Regular pattern:</strong> Remove -en from infinitive → add: <span class="mono">-e, -st, -t, -en, -t, -en</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODAL VERBS -->
+      <section id="modal-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Modal Verbs — Modalverben</h2>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Modal verbs express ability, possibility, permission, or obligation. They are always paired with an infinitive verb at the end of the sentence.</p>
+          </div>
+          <div class="modal-grid">
+            <div class="modal-card">
+              <span class="modal-verb">können</span>
+              <span class="modal-meaning">can / to be able to</span>
+              <span class="modal-ex">Ich <strong>kann</strong> Deutsch sprechen.</span>
+            </div>
+            <div class="modal-card">
+              <span class="modal-verb">müssen</span>
+              <span class="modal-meaning">must / to have to</span>
+              <span class="modal-ex">Du <strong>musst</strong> lernen.</span>
+            </div>
+            <div class="modal-card">
+              <span class="modal-verb">wollen</span>
+              <span class="modal-meaning">want to</span>
+              <span class="modal-ex">Er <strong>will</strong> schlafen.</span>
+            </div>
+            <div class="modal-card">
+              <span class="modal-verb">sollen</span>
+              <span class="modal-meaning">should / supposed to</span>
+              <span class="modal-ex">Wir <strong>sollen</strong> pünktlich sein.</span>
+            </div>
+            <div class="modal-card">
+              <span class="modal-verb">dürfen</span>
+              <span class="modal-meaning">may / allowed to</span>
+              <span class="modal-ex">Ihr <strong>dürft</strong> nicht rauchen.</span>
+            </div>
+            <div class="modal-card">
+              <span class="modal-verb">mögen</span>
+              <span class="modal-meaning">like / may</span>
+              <span class="modal-ex">Sie <strong>mögen</strong> Kaffee.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORD ORDER -->
+      <section id="wordorder-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Word Order — Satzstellung</h2>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>German word order follows the <strong>V2 rule</strong>: the conjugated verb is always in the <strong>second position</strong> in a main clause, no matter what comes first.</p>
+          </div>
+          <div class="wordorder-examples">
+            <div class="wo-row">
+              <div class="wo-boxes">
+                <div class="wo-box pos1">Ich</div>
+                <div class="wo-box verb">lerne</div>
+                <div class="wo-box">Deutsch</div>
+                <div class="wo-box">heute.</div>
+              </div>
+              <span class="wo-en">I learn German today.</span>
+            </div>
+            <div class="wo-row">
+              <div class="wo-boxes">
+                <div class="wo-box pos1">Heute</div>
+                <div class="wo-box verb">lerne</div>
+                <div class="wo-box">ich</div>
+                <div class="wo-box">Deutsch.</div>
+              </div>
+              <span class="wo-en">Today I learn German. (time moved to front)</span>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">⚠️</span>
+            <p>In subordinate clauses (with <em>weil, dass, obwohl</em>...), the verb moves to the <strong>end</strong> of the clause.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADJECTIVE ENDINGS -->
+      <section id="adjectives-grammar-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Adjective Endings — Adjektivendungen</h2>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Adjectives before nouns must agree with the noun's gender, number, and case. The ending depends on whether a definite, indefinite, or no article is used.</p>
+          </div>
+          <h3 class="sub-heading">After Definite Article (der/die/das)</h3>
+          <table class="data-table">
+            <thead><tr><th>Case</th><th class="der-text">Masculine</th><th class="die-text">Feminine</th><th class="das-text">Neuter</th><th>Plural</th></tr></thead>
+            <tbody>
+              <tr><td>Nominativ</td><td class="der-text">-e</td><td class="die-text">-e</td><td class="das-text">-e</td><td>-en</td></tr>
+              <tr><td>Akkusativ</td><td class="der-text">-en</td><td class="die-text">-e</td><td class="das-text">-e</td><td>-en</td></tr>
+              <tr><td>Dativ</td><td class="der-text">-en</td><td class="die-text">-en</td><td class="das-text">-en</td><td>-en</td></tr>
+              <tr><td>Genitiv</td><td class="der-text">-en</td><td class="die-text">-en</td><td class="das-text">-en</td><td>-en</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 3: VOCABULARY / WORD BANK
+      ═══════════════════════════════════════ -->
+      <div class="chapter-divider">
+        <span class="ch-num">03</span>
+        <span class="ch-label">Wortschatz — Vocabulary</span>
+      </div>
+
+      <!-- WORD BANK NOUNS -->
+      <section id="nouns-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Nouns — Nomen</h2>
+            <p class="card-subtitle">Sorted from most common to least common · color coded by gender</p>
+          </div>
+          <div class="card-controls">
+            <input type="text" class="filter-input" id="nounSearch" placeholder="Search nouns...">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="gender-key">
+            <span class="gender-badge der">der</span><span class="gk-label">masculine</span>
+            <span class="gender-badge die">die</span><span class="gk-label">feminine</span>
+            <span class="gender-badge das">das</span><span class="gk-label">neuter</span>
+          </div>
+          <div class="noun-table-wrap">
+            <table class="data-table noun-table" id="nounTable">
+              <thead>
+                <tr><th>Article</th><th>German</th><th>Plural</th><th>English</th></tr>
+              </thead>
+              <tbody id="nounTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORD BANK VERBS -->
+      <section id="verbs-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Verbs — Verben</h2>
+            <p class="card-subtitle">With full present tense conjugation · sorted common → rare</p>
+          </div>
+          <div class="card-controls">
+            <input type="text" class="filter-input" id="verbSearch" placeholder="Search verbs...">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="verbs-container" id="verbsContainer">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- WORD BANK ADJECTIVES -->
+      <section id="adj-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Adjectives — Adjektive</h2>
+            <p class="card-subtitle">With comparative and superlative forms</p>
+          </div>
+          <div class="card-controls">
+            <input type="text" class="filter-input" id="adjSearch" placeholder="Search adjectives...">
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="data-table" id="adjTable">
+            <thead>
+              <tr><th>German</th><th>English</th><th>Comparative</th><th>Superlative</th></tr>
+            </thead>
+            <tbody id="adjTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 4: TOOLS
+      ═══════════════════════════════════════ -->
+      <div class="chapter-divider">
+        <span class="ch-num">04</span>
+        <span class="ch-label">Werkzeuge — Tools</span>
+      </div>
+
+      <!-- WORD SEARCH TOOL -->
+      <section id="wordsearch-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Tool</span>
+            <h2 class="card-title">Word Search — Wortsuche</h2>
+            <p class="card-subtitle">Search in German or English across all vocabulary</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tool-search-wrap">
+            <input type="text" id="globalWordSearch" class="tool-input" placeholder="Type a word in German or English...">
+            <button class="tool-btn" id="wordSearchBtn">Search</button>
+          </div>
+          <div class="search-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="nouns">Nouns</button>
+            <button class="filter-btn" data-filter="verbs">Verbs</button>
+            <button class="filter-btn" data-filter="adjectives">Adjectives</button>
+          </div>
+          <div class="search-results" id="searchResults">
+            <p class="search-hint">Start typing to search the word bank...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GENDER QUIZ -->
+      <section id="genderquiz-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Tool</span>
+            <h2 class="card-title">Gender Quiz — Genus-Quiz</h2>
+            <p class="card-subtitle">Practice der / die / das</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="quiz-wrap" id="quizWrap">
+            <div class="quiz-score-bar">
+              <span>Score: <strong id="quizScore">0</strong></span>
+              <span>Questions: <strong id="quizCount">0</strong></span>
+              <button class="quiz-reset" id="quizReset">Reset</button>
+            </div>
+            <div class="quiz-word-display">
+              <span class="quiz-noun" id="quizNoun">—</span>
+              <span class="quiz-en" id="quizEn"></span>
+            </div>
+            <div class="quiz-choices">
+              <button class="quiz-choice der" data-answer="der">der</button>
+              <button class="quiz-choice die" data-answer="die">die</button>
+              <button class="quiz-choice das" data-answer="das">das</button>
+            </div>
+            <div class="quiz-feedback" id="quizFeedback"></div>
+            <button class="tool-btn" id="quizNext">Next Word →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VERB CONJUGATOR -->
+      <section id="verbconjugator-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Tool</span>
+            <h2 class="card-title">Verb Conjugator — Konjugator</h2>
+            <p class="card-subtitle">Look up any verb's conjugation table</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tool-search-wrap">
+            <input type="text" id="conjInput" class="tool-input" placeholder="Enter a verb (e.g. machen, sein, haben)...">
+            <button class="tool-btn" id="conjBtn">Conjugate</button>
+          </div>
+          <div class="conj-result" id="conjResult"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" title="Back to top">↑</button>
+
+  </div><!-- end main-wrapper -->
+
+  <script src="deutschar-v1.js"></script>
+</body>
+</html>
