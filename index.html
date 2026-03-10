@@ -6,12 +6,51 @@
   <title>DeutschAR.EDU — Learn German</title>
   <meta name="author" content="Abdelrahman Mohamed">
   <meta name="description" content="A modern, interactive German learning encyclopedia.">
+  <meta name="theme-color" content="#0D1B2A" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#FAF7F0" media="(prefers-color-scheme: light)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="deutschar-v1.css">
+  <script>
+    /* ── Anti-flash: apply saved theme before CSS renders ── */
+    (function(){
+      var t = localStorage.getItem('deutschar-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- SEARCH OVERLAY (Ctrl+K) -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-modal">
+      <div class="search-modal-header">
+        <span class="search-modal-icon">⌕</span>
+        <input type="text" class="search-modal-input" id="overlaySearchInput" placeholder="Search words, topics, grammar…" autocomplete="off">
+        <button class="search-modal-close" id="overlaySearchClose">Esc</button>
+      </div>
+      <div class="search-modal-results" id="overlaySearchResults">
+        <p class="search-modal-hint">Type to search across all vocabulary and grammar…</p>
+      </div>
+      <div class="search-modal-footer">
+        <span class="smf-key"><kbd>↵</kbd> to visit</span>
+        <span class="smf-key"><kbd>Esc</kbd> to close</span>
+        <span class="smf-key"><kbd>Ctrl K</kbd> to open</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKMARKS PANEL -->
+  <div class="bookmarks-panel" id="bookmarksPanel">
+    <div class="bookmarks-panel-header">
+      <span class="bookmarks-panel-title">⭐ Bookmarks</span>
+      <button class="bookmarks-close" id="bookmarksClose">✕</button>
+    </div>
+    <div class="bookmarks-list" id="bookmarksList">
+      <p class="bookmarks-empty">No bookmarks yet. Click ☆ on any section to save it.</p>
+    </div>
+  </div>
 
   <!-- MOBILE OVERLAY -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -69,6 +108,12 @@
           <a href="#separable-section" class="nav-item" data-section="separable-section">Separable Verbs — Trennbare Verben</a>
           <a href="#prepositions-section" class="nav-item" data-section="prepositions-section">Local Prepositions</a>
           <a href="#adjectives-grammar-section" class="nav-item" data-section="adjectives-grammar-section">Adjective Endings</a>
+          <a href="#perfect-section" class="nav-item" data-section="perfect-section">Perfect Tense — Perfekt</a>
+          <a href="#passive-section" class="nav-item" data-section="passive-section">Passive Voice — Passiv</a>
+          <a href="#konjunktiv-section" class="nav-item" data-section="konjunktiv-section">Konjunktiv II</a>
+          <a href="#subconj-section" class="nav-item" data-section="subconj-section">Subordinating Conjunctions</a>
+          <a href="#relative-section" class="nav-item" data-section="relative-section">Relative Clauses</a>
+          <a href="#ordinals-section" class="nav-item" data-section="ordinals-section">Ordinal Numbers</a>
         </div>
       </div>
 
@@ -90,6 +135,13 @@
           <a href="#clothing-section" class="nav-item" data-section="clothing-section">Clothing & Shopping</a>
           <a href="#opposites-section" class="nav-item" data-section="opposites-section">Opposites — Gegenteile</a>
           <a href="#countries-section" class="nav-item" data-section="countries-section">Countries — Länder</a>
+          <a href="#weather-section" class="nav-item" data-section="weather-section">Weather — das Wetter</a>
+          <a href="#body-section" class="nav-item" data-section="body-section">Body Parts — der Körper</a>
+          <a href="#family-section" class="nav-item" data-section="family-section">Family — die Familie</a>
+          <a href="#animals-section" class="nav-item" data-section="animals-section">Animals — die Tiere</a>
+          <a href="#transport-section" class="nav-item" data-section="transport-section">Transport — Verkehrsmittel</a>
+          <a href="#school-section" class="nav-item" data-section="school-section">School & University</a>
+          <a href="#tech-section" class="nav-item" data-section="tech-section">Technology & Social Media</a>
         </div>
       </div>
 
@@ -115,6 +167,9 @@
           <a href="#wordsearch-section" class="nav-item" data-section="wordsearch-section">Word Search</a>
           <a href="#genderquiz-section" class="nav-item" data-section="genderquiz-section">Gender Quiz</a>
           <a href="#verbconjugator-section" class="nav-item" data-section="verbconjugator-section">Verb Conjugator</a>
+          <a href="#flashcard-section" class="nav-item" data-section="flashcard-section">Flashcards</a>
+          <a href="#fitb-section" class="nav-item" data-section="fitb-section">Fill in the Blank</a>
+          <a href="#matching-section" class="nav-item" data-section="matching-section">Matching Game</a>
         </div>
       </div>
 
@@ -138,6 +193,10 @@
         <span class="logo-text">Deutsch</span><span class="logo-ar">AR</span><span class="logo-edu">.EDU</span>
       </div>
       <div class="topbar-actions">
+        <button class="search-trigger" id="searchTrigger" title="Search (Ctrl+K)">
+          <span>⌕ Search</span><kbd>Ctrl K</kbd>
+        </button>
+        <button class="topbar-bookmark-btn" id="topbarBookmarkBtn" title="Bookmarks">☆</button>
         <button class="theme-toggle" id="themeToggle" title="Toggle theme">
           <span class="theme-icon-dark">☾</span>
           <span class="theme-icon-light">☀</span>
@@ -147,6 +206,53 @@
 
     <!-- CONTENT -->
     <main class="content" id="content">
+
+      <!-- WORD OF THE DAY -->
+      <div class="wotd-bar" id="wotdBar">
+        <span class="wotd-label">⚡ Word of the Day</span>
+        <span class="wotd-de" id="wotdDe">—</span>
+        <span class="wotd-en" id="wotdEn">—</span>
+        <button class="wotd-learn-btn" id="wotdLearnBtn">📖 Learn It</button>
+        <button class="wotd-new-btn" id="wotdNewBtn">↻ New word</button>
+      </div>
+
+      <!-- WORD OF THE DAY MODAL -->
+      <div class="wotd-modal-overlay" id="wotdModalOverlay">
+        <div class="wotd-modal" id="wotdModal">
+          <div class="wotd-modal-header">
+            <span class="wotd-modal-tag">⚡ Word of the Day</span>
+            <button class="wotd-modal-close" id="wotdModalClose">✕</button>
+          </div>
+          <div class="wotd-modal-body" id="wotdModalBody">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS DASHBOARD -->
+      <div class="stats-dashboard" id="statsDashboard">
+        <div class="stats-dashboard-title">📊 Your Progress</div>
+        <div class="stat-card">
+          <span class="stat-card-num" id="dashSections">0</span>
+          <span class="stat-card-label">Sections Visited</span>
+          <div class="stat-card-bar"><div class="stat-card-bar-fill" id="dashSectionsBar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-num" id="dashDone">0</span>
+          <span class="stat-card-label">Sections Done</span>
+          <div class="stat-card-bar"><div class="stat-card-bar-fill" id="dashDoneBar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-num" id="dashWords">600+</span>
+          <span class="stat-card-label">Words Available</span>
+          <div class="stat-card-bar"><div class="stat-card-bar-fill" style="width:100%"></div></div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-num" id="dashBookmarks">0</span>
+          <span class="stat-card-label">Bookmarks</span>
+          <div class="stat-card-bar"><div class="stat-card-bar-fill" id="dashBookmarksBar" style="width:0%"></div></div>
+        </div>
+      </div>
 
       <!-- ═══════════════════════════════════════
            HERO
@@ -168,15 +274,15 @@
           </p>
           <div class="hero-stats">
             <div class="stat">
-              <span class="stat-num" id="statSections">32</span>
+              <span class="stat-num" id="statSections">42</span>
               <span class="stat-label">Topics</span>
             </div>
             <div class="stat">
-              <span class="stat-num" id="statWords">220+</span>
+              <span class="stat-num" id="statWords">600+</span>
               <span class="stat-label">Words</span>
             </div>
             <div class="stat">
-              <span class="stat-num" id="statTools">3</span>
+              <span class="stat-num" id="statTools">6</span>
               <span class="stat-label">Tools</span>
             </div>
           </div>
@@ -193,6 +299,42 @@
           <div class="deco-word w1">Hallo</div>
           <div class="deco-word w2">Danke</div>
           <div class="deco-word w3">Schön</div>
+        </div>
+
+        <!-- STATUS TICKER -->
+        <div class="hero-ticker">
+          <div class="ticker-live-badge">◉ LIVE</div>
+          <div class="ticker-track">
+            <span class="ticker-item"><span class="ticker-dot"></span>Version 2.0</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>42 Content Sections</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>6 Live Interactive Tools</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>600+ Words in Bank</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>5 Chapters · Full Grammar</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>Educational Level: A1 → B2</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>der · die · das Color Coding</span>
+            <span class="ticker-sep">·</span>
+            <!-- duplicate for seamless loop -->
+            <span class="ticker-item"><span class="ticker-dot"></span>Version 2.0</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>42 Content Sections</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>6 Live Interactive Tools</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>600+ Words in Bank</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>5 Chapters · Full Grammar</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>Educational Level: A1 → B2</span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item"><span class="ticker-dot"></span>der · die · das Color Coding</span>
+            <span class="ticker-sep">·</span>
+          </div>
         </div>
       </section>
 
@@ -240,7 +382,6 @@
             </div>
           </div>
           <div class="pronunciation-table-wrap">
-            <div style="overflow-x:auto">
           <table class="data-table">
               <thead>
                 <tr><th>Letter</th><th>German Name</th><th>Sound (approx.)</th><th>Example</th></tr>
@@ -275,7 +416,6 @@
               </tbody>
             </table>
           </div>
-          </div>
           <div class="tip-block">
             <span class="tip-icon">💡</span>
             <p><strong>Key rule:</strong> German is phonetic — once you learn the sounds, you can pronounce any word you read!</p>
@@ -289,7 +429,7 @@
           <div class="card-title-group">
             <span class="card-tag">Basics</span>
             <h2 class="card-title">Numbers — Zahlen</h2>
-            <p class="card-subtitle">Cardinal and ordinal numbers</p>
+            <p class="card-subtitle">Cardinal numbers — from zero to billions</p>
           </div>
         </div>
         <div class="card-body">
@@ -782,7 +922,7 @@
           <div class="card-title-group">
             <span class="card-tag">Grammar</span>
             <h2 class="card-title">Simple Past — Präteritum</h2>
-            <p class="card-subtitle">Mitvergangenheit · written past tense for most verbs</p>
+            <p class="card-subtitle">Written past tense — used in narration, news, and formal writing</p>
           </div>
         </div>
         <div class="card-body">
@@ -922,7 +1062,7 @@
                 <span class="modal-verb">möchten</span>
                 <span class="modal-meaning">would like to</span>
               </div>
-              <span class="modal-function">Polite form of wollen — used for requests</span>
+              <span class="modal-function">Konjunktiv II of mögen — used for polite requests</span>
               <span class="modal-ex">Ich <strong>möchte</strong> ein Wasser bitte. <em>(I'd like a water please.)</em></span>
               <span class="modal-ex">Wir <strong>möchten</strong> bestellen. <em>(We'd like to order.)</em></span>
             </div>
@@ -1363,6 +1503,351 @@
         </div>
       </section>
 
+      <!-- PERFECT TENSE -->
+      <section id="perfect-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Perfect Tense — Das Perfekt</h2>
+            <p class="card-subtitle">The most common past tense in spoken German</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>The Perfekt is formed with a <strong>helper verb</strong> (haben or sein) conjugated in the present, plus the <strong>Partizip II</strong> (past participle) at the end of the sentence.</p>
+          </div>
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">With <em>haben</em> — most verbs</h3>
+              <div class="grammar-formula">haben (conjugated) + Partizip II</div>
+              <div class="vocab-list" style="margin-top:.75rem">
+                <div class="vocab-row"><span class="de">Ich <strong>habe</strong> gegessen.</span><span class="en">I have eaten / I ate.</span></div>
+                <div class="vocab-row"><span class="de">Du <strong>hast</strong> gemacht.</span><span class="en">You have done / You did.</span></div>
+                <div class="vocab-row"><span class="de">Er <strong>hat</strong> geschlafen.</span><span class="en">He has slept / He slept.</span></div>
+                <div class="vocab-row"><span class="de">Wir <strong>haben</strong> gelernt.</span><span class="en">We have learned / We learned.</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">With <em>sein</em> — motion & change</h3>
+              <div class="grammar-formula">sein (conjugated) + Partizip II</div>
+              <div class="vocab-list" style="margin-top:.75rem">
+                <div class="vocab-row"><span class="de">Ich <strong>bin</strong> gegangen.</span><span class="en">I have gone / I went.</span></div>
+                <div class="vocab-row"><span class="de">Du <strong>bist</strong> gefahren.</span><span class="en">You have driven / You drove.</span></div>
+                <div class="vocab-row"><span class="de">Er <strong>ist</strong> gekommen.</span><span class="en">He has come / He came.</span></div>
+                <div class="vocab-row"><span class="de">Sie <strong>ist</strong> geworden.</span><span class="en">She has become / She became.</span></div>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Partizip II Formation</h3>
+          <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Verb type</th><th>Pattern</th><th>Example</th><th>Partizip II</th></tr></thead>
+            <tbody>
+              <tr><td>Regular (weak)</td><td>ge- + stem + -t</td><td>machen</td><td class="conj-form">gemacht</td></tr>
+              <tr><td>Regular (weak)</td><td>ge- + stem + -t</td><td>lernen</td><td class="conj-form">gelernt</td></tr>
+              <tr><td>Irregular (strong)</td><td>ge- + stem + -en (vowel change)</td><td>fahren</td><td class="conj-form irregular">gefahren</td></tr>
+              <tr><td>Irregular (strong)</td><td>ge- + stem + -en (vowel change)</td><td>schreiben</td><td class="conj-form irregular">geschrieben</td></tr>
+              <tr><td>Separable verb</td><td>prefix + ge + stem + -t/-en</td><td>aufmachen</td><td class="conj-form">aufgemacht</td></tr>
+              <tr><td>-ieren verbs</td><td>no ge-, stem + -t</td><td>studieren</td><td class="conj-form">studiert</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Common Irregular Partizip II</h3>
+          <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Infinitive</th><th>English</th><th>Partizip II</th><th>Helper</th></tr></thead>
+            <tbody>
+              <tr><td>sein</td><td>to be</td><td class="conj-form irregular">gewesen</td><td>sein</td></tr>
+              <tr><td>haben</td><td>to have</td><td class="conj-form irregular">gehabt</td><td>haben</td></tr>
+              <tr><td>gehen</td><td>to go</td><td class="conj-form irregular">gegangen</td><td>sein</td></tr>
+              <tr><td>kommen</td><td>to come</td><td class="conj-form irregular">gekommen</td><td>sein</td></tr>
+              <tr><td>fahren</td><td>to drive</td><td class="conj-form irregular">gefahren</td><td>sein</td></tr>
+              <tr><td>essen</td><td>to eat</td><td class="conj-form irregular">gegessen</td><td>haben</td></tr>
+              <tr><td>trinken</td><td>to drink</td><td class="conj-form irregular">getrunken</td><td>haben</td></tr>
+              <tr><td>schreiben</td><td>to write</td><td class="conj-form irregular">geschrieben</td><td>haben</td></tr>
+              <tr><td>sehen</td><td>to see</td><td class="conj-form irregular">gesehen</td><td>haben</td></tr>
+              <tr><td>schlafen</td><td>to sleep</td><td class="conj-form irregular">geschlafen</td><td>haben</td></tr>
+              <tr><td>lesen</td><td>to read</td><td class="conj-form irregular">gelesen</td><td>haben</td></tr>
+              <tr><td>sprechen</td><td>to speak</td><td class="conj-form irregular">gesprochen</td><td>haben</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p><strong>Sein verbs</strong> = verbs of motion (gehen, fahren, fliegen) or change of state (werden, sterben, wachsen). When in doubt → use <em>haben</em>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PASSIVE VOICE -->
+      <section id="passive-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Passive Voice — Das Passiv</h2>
+            <p class="card-subtitle">When the action matters more than who does it</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>The German passive is formed with <strong>werden</strong> (conjugated) + <strong>Partizip II</strong>. The agent (who does it) is optional and introduced by <em>von</em>.</p>
+          </div>
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Present Passive (Präsens)</h3>
+              <div class="grammar-formula">werden (present) + Partizip II</div>
+              <div class="vocab-list" style="margin-top:.75rem">
+                <div class="vocab-row"><span class="de">Das Buch <strong>wird</strong> gelesen.</span><span class="en">The book is being read.</span></div>
+                <div class="vocab-row"><span class="de">Die Tür <strong>wird</strong> geöffnet.</span><span class="en">The door is being opened.</span></div>
+                <div class="vocab-row"><span class="de">Das Auto <strong>wird</strong> gebaut.</span><span class="en">The car is being built.</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Past Passive (Präteritum)</h3>
+              <div class="grammar-formula">wurde/wurden (past) + Partizip II</div>
+              <div class="vocab-list" style="margin-top:.75rem">
+                <div class="vocab-row"><span class="de">Das Buch <strong>wurde</strong> geschrieben.</span><span class="en">The book was written.</span></div>
+                <div class="vocab-row"><span class="de">Die Stadt <strong>wurde</strong> gebaut.</span><span class="en">The city was built.</span></div>
+                <div class="vocab-row"><span class="de">Das Auto <strong>wurde</strong> repariert.</span><span class="en">The car was repaired.</span></div>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">werden — Passive Helper Conjugation</h3>
+          <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Pronoun</th><th>Present (wird)</th><th>Simple Past (wurde)</th></tr></thead>
+            <tbody>
+              <tr><td class="pronoun">ich</td><td class="conj-form">werde</td><td class="conj-form praeteritum">wurde</td></tr>
+              <tr><td class="pronoun">du</td><td class="conj-form">wirst</td><td class="conj-form praeteritum">wurdest</td></tr>
+              <tr><td class="pronoun">er / sie / es</td><td class="conj-form">wird</td><td class="conj-form praeteritum">wurde</td></tr>
+              <tr><td class="pronoun">wir</td><td class="conj-form">werden</td><td class="conj-form praeteritum">wurden</td></tr>
+              <tr><td class="pronoun">ihr</td><td class="conj-form">werdet</td><td class="conj-form praeteritum">wurdet</td></tr>
+              <tr><td class="pronoun">sie / Sie</td><td class="conj-form">werden</td><td class="conj-form praeteritum">wurden</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p>To show the agent (who does the action), use <strong>von + Dativ</strong>: <em>Das Buch wurde <strong>von dem Autor</strong> geschrieben.</em> (The book was written by the author.)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- KONJUNKTIV II -->
+      <section id="konjunktiv-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Konjunktiv II — Conditional & Polite</h2>
+            <p class="card-subtitle">würde, hätte, wäre — the subjunctive mood</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Konjunktiv II expresses <strong>hypothetical situations</strong>, <strong>polite requests</strong>, and <strong>wishes</strong>. The most common form uses <em>würde + infinitive</em>, but key verbs have their own special forms.</p>
+          </div>
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">würde + Infinitive (most verbs)</h3>
+              <table class="conj-table">
+                <thead><tr><th>Pronoun</th><th>Form</th></tr></thead>
+                <tbody>
+                  <tr><td class="pronoun">ich</td><td class="conj-form irregular">würde … machen</td></tr>
+                  <tr><td class="pronoun">du</td><td class="conj-form irregular">würdest … machen</td></tr>
+                  <tr><td class="pronoun">er / sie / es</td><td class="conj-form irregular">würde … machen</td></tr>
+                  <tr><td class="pronoun">wir</td><td class="conj-form irregular">würden … machen</td></tr>
+                  <tr><td class="pronoun">ihr</td><td class="conj-form irregular">würdet … machen</td></tr>
+                  <tr><td class="pronoun">sie / Sie</td><td class="conj-form irregular">würden … machen</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h3 class="sub-heading">Essential Irregular Forms</h3>
+              <div style="overflow-x:auto">
+              <table class="data-table">
+                <thead><tr><th>Infinitive</th><th>ich</th><th>du</th><th>er/sie/es</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>sein</strong> (to be)</td><td class="conj-form irregular">wäre</td><td class="conj-form irregular">wärst</td><td class="conj-form irregular">wäre</td></tr>
+                  <tr><td><strong>haben</strong> (to have)</td><td class="conj-form irregular">hätte</td><td class="conj-form irregular">hättest</td><td class="conj-form irregular">hätte</td></tr>
+                  <tr><td><strong>können</strong> (can)</td><td class="conj-form irregular">könnte</td><td class="conj-form irregular">könntest</td><td class="conj-form irregular">könnte</td></tr>
+                  <tr><td><strong>müssen</strong> (must)</td><td class="conj-form irregular">müsste</td><td class="conj-form irregular">müsstest</td><td class="conj-form irregular">müsste</td></tr>
+                  <tr><td><strong>dürfen</strong> (may)</td><td class="conj-form irregular">dürfte</td><td class="conj-form irregular">dürftest</td><td class="conj-form irregular">dürfte</td></tr>
+                  <tr><td><strong>sollen</strong> (should)</td><td class="conj-form irregular">sollte</td><td class="conj-form irregular">solltest</td><td class="conj-form irregular">sollte</td></tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Common Konjunktiv II Sentences</h3>
+          <div class="vocab-list">
+            <div class="vocab-row"><span class="de">Ich <strong>würde</strong> gerne kommen.</span><span class="en">I would like to come.</span></div>
+            <div class="vocab-row"><span class="de">Wenn ich Zeit <strong>hätte</strong>, …</span><span class="en">If I had time, …</span></div>
+            <div class="vocab-row"><span class="de">Das <strong>wäre</strong> schön.</span><span class="en">That would be nice.</span></div>
+            <div class="vocab-row"><span class="de"><strong>Könnten</strong> Sie mir helfen?</span><span class="en">Could you help me?</span></div>
+            <div class="vocab-row"><span class="de">Ich <strong>hätte</strong> gerne einen Kaffee.</span><span class="en">I would like a coffee.</span></div>
+            <div class="vocab-row"><span class="de">Was <strong>würdest</strong> du tun?</span><span class="en">What would you do?</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUBORDINATING CONJUNCTIONS -->
+      <section id="subconj-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Subordinating Conjunctions — Subordinierende Konjunktionen</h2>
+            <p class="card-subtitle">weil, dass, obwohl, wenn — verbs go to the end!</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Subordinating conjunctions introduce a <strong>dependent clause</strong> — the conjugated verb is pushed to the <strong>very end</strong> of that clause. This is one of the most important German grammar rules.</p>
+          </div>
+          <div class="grammar-formula" style="margin-bottom:1.25rem">Main clause, <strong>conjunction</strong> + subject + … + <span style="color:var(--flag-red)">VERB</span></div>
+          <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Conjunction</th><th>Meaning</th><th>Example</th><th>Translation</th></tr></thead>
+            <tbody>
+              <tr><td class="conj-form">weil</td><td>because</td><td><em>Ich bleibe zu Hause, weil ich krank <strong>bin</strong>.</em></td><td>I'm staying home because I'm sick.</td></tr>
+              <tr><td class="conj-form">dass</td><td>that</td><td><em>Ich glaube, dass er recht <strong>hat</strong>.</em></td><td>I think that he is right.</td></tr>
+              <tr><td class="conj-form">obwohl</td><td>although</td><td><em>Er geht raus, obwohl es regnet.</em></td><td>He goes out although it's raining.</td></tr>
+              <tr><td class="conj-form">wenn</td><td>when / if</td><td><em>Wenn du Zeit <strong>hast</strong>, ruf an.</em></td><td>When / If you have time, call.</td></tr>
+              <tr><td class="conj-form">als</td><td>when (past)</td><td><em>Als ich jung <strong>war</strong>, …</em></td><td>When I was young, …</td></tr>
+              <tr><td class="conj-form">ob</td><td>whether / if</td><td><em>Ich weiß nicht, ob er <strong>kommt</strong>.</em></td><td>I don't know if he's coming.</td></tr>
+              <tr><td class="conj-form">damit</td><td>so that</td><td><em>Ich lerne, damit ich bestehe.</em></td><td>I'm studying so that I pass.</td></tr>
+              <tr><td class="conj-form">bevor</td><td>before</td><td><em>Ich esse, bevor ich <strong>gehe</strong>.</em></td><td>I eat before I leave.</td></tr>
+              <tr><td class="conj-form">nachdem</td><td>after</td><td><em>Nachdem er gegessen <strong>hatte</strong>, …</em></td><td>After he had eaten, …</td></tr>
+              <tr><td class="conj-form">seitdem</td><td>since</td><td><em>Seitdem ich hier <strong>bin</strong>, …</em></td><td>Since I've been here, …</td></tr>
+              <tr><td class="conj-form">bis</td><td>until</td><td><em>Warte, bis er <strong>kommt</strong>.</em></td><td>Wait until he comes.</td></tr>
+              <tr><td class="conj-form">falls</td><td>in case / if</td><td><em>Falls du Hilfe <strong>brauchst</strong>, …</em></td><td>In case you need help, …</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">⚠️</span>
+            <p><strong>Don't confuse</strong> <em>weil</em> (because — verb-final) with <em>denn</em> (because — normal word order). <em>Denn</em> is a coordinating conjunction and does NOT send the verb to the end.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RELATIVE CLAUSES -->
+      <section id="relative-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Relative Clauses — Relativsätze</h2>
+            <p class="card-subtitle">der / die / das as relative pronouns</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Relative clauses describe a noun using <strong>relative pronouns</strong> (der, die, das, etc.) that agree with the noun's <strong>gender and number</strong>. The verb goes to the end — just like subordinating conjunctions.</p>
+          </div>
+          <h3 class="sub-heading">Relative Pronouns Table</h3>
+          <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Case</th><th class="der-text">Masculine</th><th class="die-text">Feminine</th><th class="das-text">Neuter</th><th>Plural</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Nominativ</strong></td><td class="der-text">der</td><td class="die-text">die</td><td class="das-text">das</td><td>die</td></tr>
+              <tr><td><strong>Akkusativ</strong></td><td class="der-text">den</td><td class="die-text">die</td><td class="das-text">das</td><td>die</td></tr>
+              <tr><td><strong>Dativ</strong></td><td class="der-text">dem</td><td class="die-text">der</td><td class="das-text">dem</td><td>denen</td></tr>
+              <tr><td><strong>Genitiv</strong></td><td class="der-text">dessen</td><td class="die-text">deren</td><td class="das-text">dessen</td><td>deren</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.5rem">Examples by Gender</h3>
+          <div class="vocab-list">
+            <div class="vocab-row">
+              <span class="de"><span class="der-text">Der Mann, <strong>der</strong></span> dort steht, ist mein Lehrer.</span>
+              <span class="en">The man <strong>who</strong> stands there is my teacher. <em>(masc. Nom.)</em></span>
+            </div>
+            <div class="vocab-row">
+              <span class="de"><span class="die-text">Die Frau, <strong>die</strong></span> ich kenne, heißt Anna.</span>
+              <span class="en">The woman <strong>whom</strong> I know is called Anna. <em>(fem. Akk.)</em></span>
+            </div>
+            <div class="vocab-row">
+              <span class="de"><span class="das-text">Das Buch, <strong>das</strong></span> er liest, ist interessant.</span>
+              <span class="en">The book <strong>that</strong> he reads is interesting. <em>(neut. Akk.)</em></span>
+            </div>
+            <div class="vocab-row">
+              <span class="de">Die Kinder, <strong>denen</strong> ich helfe, sind nett.</span>
+              <span class="en">The children <strong>whom</strong> I help are nice. <em>(plural Dat.)</em></span>
+            </div>
+            <div class="vocab-row">
+              <span class="de">Der Mann, <strong>dessen</strong> Auto rot ist, wohnt hier.</span>
+              <span class="en">The man <strong>whose</strong> car is red lives here. <em>(Genitiv)</em></span>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p>The relative clause is always surrounded by <strong>commas</strong>. The relative pronoun matches the <em>gender of the noun</em> it refers to, but its <em>case</em> depends on its role in the relative clause.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDINAL NUMBERS -->
+      <section id="ordinals-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Grammar</span>
+            <h2 class="card-title">Ordinal Numbers — Ordinalzahlen</h2>
+            <p class="card-subtitle">erste, zweite, dritte — first, second, third…</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Ordinal numbers are formed by adding <strong>-te</strong> (1–19) or <strong>-ste</strong> (20+) to the cardinal number. They then take <strong>adjective endings</strong> like any other adjective. A few are irregular.</p>
+          </div>
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">1st — 19th (-te)</h3>
+              <div style="overflow-x:auto">
+              <table class="data-table">
+                <thead><tr><th>#</th><th>Ordinal stem</th><th>Example (der)</th></tr></thead>
+                <tbody>
+                  <tr><td>1.</td><td class="conj-form irregular">erst-</td><td>der erste Tag</td></tr>
+                  <tr><td>2.</td><td class="conj-form irregular">zweit-</td><td>das zweite Mal</td></tr>
+                  <tr><td>3.</td><td class="conj-form irregular">dritt-</td><td>die dritte Straße</td></tr>
+                  <tr><td>4.</td><td class="conj-form">viert-</td><td>der vierte April</td></tr>
+                  <tr><td>5.</td><td class="conj-form">fünft-</td><td>die fünfte Etage</td></tr>
+                  <tr><td>6.</td><td class="conj-form">sechst-</td><td>das sechste Kind</td></tr>
+                  <tr><td>7.</td><td class="conj-form irregular">siebt-</td><td>der siebte Monat</td></tr>
+                  <tr><td>8.</td><td class="conj-form">acht-</td><td>die achte Stunde</td></tr>
+                  <tr><td>10.</td><td class="conj-form">zehnt-</td><td>der zehnte März</td></tr>
+                  <tr><td>19.</td><td class="conj-form">neunzehnt-</td><td>der neunzehnte</td></tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">20th+ (-ste)</h3>
+              <div style="overflow-x:auto">
+              <table class="data-table">
+                <thead><tr><th>#</th><th>Ordinal stem</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td>20.</td><td class="conj-form">zwanzigst-</td><td>der zwanzigste</td></tr>
+                  <tr><td>21.</td><td class="conj-form">einundzwanzigst-</td><td>der einundzwanzigste</td></tr>
+                  <tr><td>30.</td><td class="conj-form">dreißigst-</td><td>der dreißigste</td></tr>
+                  <tr><td>100.</td><td class="conj-form">hundertst-</td><td>der hundertste</td></tr>
+                </tbody>
+              </table>
+              </div>
+              <h3 class="sub-heading" style="margin-top:1.25rem">Usage Examples</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">am <strong>ersten</strong> Januar</span><span class="en">on the 1st of January</span></div>
+                <div class="vocab-row"><span class="de">zum <strong>zweiten</strong> Mal</span><span class="en">for the second time</span></div>
+                <div class="vocab-row"><span class="de">Er ist <strong>Dritter</strong>.</span><span class="en">He's in third place.</span></div>
+                <div class="vocab-row"><span class="de">im <strong>zwanzigsten</strong> Jahrhundert</span><span class="en">in the 20th century</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p>In writing, ordinal numbers are shown with a dot: <strong>1.</strong> = erste, <strong>3.</strong> = dritte, <strong>21.</strong> = einundzwanzigste.</p>
+          </div>
+        </div>
+      </section>
+
       <!-- ═══════════════════════════════════════
            CHAPTER 3: VOCABULARY / WORD BANK
       ═══════════════════════════════════════ -->
@@ -1384,6 +1869,12 @@
           </div>
         </div>
         <div class="card-body">
+          <div class="level-filter-row" id="nounLevelFilter">
+            <button class="level-filter-btn active" data-level="all">All</button>
+            <button class="level-filter-btn" data-level="1">⭐ Level 1 — Most Common</button>
+            <button class="level-filter-btn" data-level="2">⭐⭐ Level 2 — Common</button>
+            <button class="level-filter-btn" data-level="3">⭐⭐⭐ Level 3 — Advanced</button>
+          </div>
           <div class="gender-key">
             <span class="gender-badge der">der</span><span class="gk-label">masculine</span>
             <span class="gender-badge die">die</span><span class="gk-label">feminine</span>
@@ -1415,6 +1906,12 @@
           </div>
         </div>
         <div class="card-body">
+          <div class="level-filter-row" id="verbLevelFilter">
+            <button class="level-filter-btn active" data-level="all">All</button>
+            <button class="level-filter-btn" data-level="1">⭐ Level 1 — Essential</button>
+            <button class="level-filter-btn" data-level="2">⭐⭐ Level 2 — Common</button>
+            <button class="level-filter-btn" data-level="3">⭐⭐⭐ Level 3 — Advanced</button>
+          </div>
           <div class="verbs-container" id="verbsContainer">
             <!-- Populated by JS -->
           </div>
@@ -1434,6 +1931,12 @@
           </div>
         </div>
         <div class="card-body">
+          <div class="level-filter-row" id="adjLevelFilter">
+            <button class="level-filter-btn active" data-level="all">All</button>
+            <button class="level-filter-btn" data-level="1">⭐ Level 1 — Essential</button>
+            <button class="level-filter-btn" data-level="2">⭐⭐ Level 2 — Common</button>
+            <button class="level-filter-btn" data-level="3">⭐⭐⭐ Level 3 — Advanced</button>
+          </div>
           <div style="overflow-x:auto">
           <table class="data-table" id="adjTable">
             <thead>
@@ -1845,10 +2348,10 @@
               <tr><td><span class="gender-badge der" style="font-size:.7rem;padding:2px 7px">der</span></td><td><strong>der Libanon</strong></td><td>Lebanon</td><td>aus dem Libanon</td><td>in den Libanon</td></tr>
               <tr><td><span class="gender-badge der" style="font-size:.7rem;padding:2px 7px">der</span></td><td><strong>der Jemen</strong></td><td>Yemen</td><td>aus dem Jemen</td><td>in den Jemen</td></tr>
               <tr><td><span class="gender-badge der" style="font-size:.7rem;padding:2px 7px">der</span></td><td><strong>der Senegal</strong></td><td>Senegal</td><td>aus dem Senegal</td><td>in den Senegal</td></tr>
-              <tr><td><span class="gender-badge das" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die USA</strong></td><td>USA</td><td>aus den USA</td><td>in die USA</td></tr>
-              <tr><td><span class="gender-badge das" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die Niederlande</strong></td><td>Netherlands</td><td>aus den Niederlanden</td><td>in die Niederlande</td></tr>
-              <tr><td><span class="gender-badge das" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die Philippinen</strong></td><td>Philippines</td><td>aus den Philippinen</td><td>in die Philippinen</td></tr>
-              <tr><td><span class="gender-badge das" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die Malediven</strong></td><td>Maldives</td><td>aus den Malediven</td><td>in die Malediven</td></tr>
+              <tr><td><span class="gender-badge die" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die USA</strong></td><td>USA</td><td>aus den USA</td><td>in die USA</td></tr>
+              <tr><td><span class="gender-badge die" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die Niederlande</strong></td><td>Netherlands</td><td>aus den Niederlanden</td><td>in die Niederlande</td></tr>
+              <tr><td><span class="gender-badge die" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die Philippinen</strong></td><td>Philippines</td><td>aus den Philippinen</td><td>in die Philippinen</td></tr>
+              <tr><td><span class="gender-badge die" style="font-size:.7rem;padding:2px 7px">die (pl)</span></td><td><strong>die Malediven</strong></td><td>Maldives</td><td>aus den Malediven</td><td>in die Malediven</td></tr>
             </tbody>
           </table>
           </div>
@@ -1968,6 +2471,409 @@
               <tr><td>Polen</td><td class="der-text">der Pole</td><td class="die-text">die Polin</td><td>Polnisch</td></tr>
             </tbody>
           </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- WEATHER -->
+      <section id="weather-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Weather — das Wetter</h2>
+            <p class="card-subtitle">Talk about the weather like a local</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-block">
+            <p>Weather expressions in German often use <strong>es</strong> as an impersonal subject: <em>Es regnet. Es ist kalt. Es schneit.</em></p>
+          </div>
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Weather Conditions</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">Es regnet.</span><span class="en">It's raining.</span></div>
+                <div class="vocab-row"><span class="de">Es schneit.</span><span class="en">It's snowing.</span></div>
+                <div class="vocab-row"><span class="de">Es ist sonnig.</span><span class="en">It's sunny.</span></div>
+                <div class="vocab-row"><span class="de">Es ist bewölkt.</span><span class="en">It's cloudy.</span></div>
+                <div class="vocab-row"><span class="de">Es ist windig.</span><span class="en">It's windy.</span></div>
+                <div class="vocab-row"><span class="de">Es donnert.</span><span class="en">It's thundering.</span></div>
+                <div class="vocab-row"><span class="de">Es blitzt.</span><span class="en">There's lightning.</span></div>
+                <div class="vocab-row"><span class="de">Es hagelt.</span><span class="en">It's hailing.</span></div>
+                <div class="vocab-row"><span class="de">Es ist neblig.</span><span class="en">It's foggy.</span></div>
+                <div class="vocab-row"><span class="de">Es ist schwül.</span><span class="en">It's humid / muggy.</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Temperature & Nouns</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Wetter</span><span class="en">weather</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Sonne</span><span class="en">sun</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Regen</span><span class="en">rain</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Schnee</span><span class="en">snow</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Wind</span><span class="en">wind</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Wolke</span><span class="en">cloud</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Gewitter</span><span class="en">thunderstorm</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Nebel</span><span class="en">fog</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Eis</span><span class="en">ice</span></div>
+                <div class="vocab-row"><span class="de">Es ist 20 Grad.</span><span class="en">It's 20 degrees (Celsius).</span></div>
+                <div class="vocab-row"><span class="de">Es ist heiß / kalt.</span><span class="en">It's hot / cold.</span></div>
+                <div class="vocab-row"><span class="de">Es ist warm / kühl.</span><span class="en">It's warm / cool.</span></div>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.25rem">Seasons — die Jahreszeiten</h3>
+          <div class="vocab-list">
+            <div class="vocab-row"><span class="de"><strong>der Frühling</strong> / das Frühjahr</span><span class="en">spring — im Frühling</span></div>
+            <div class="vocab-row"><span class="de"><strong>der Sommer</strong></span><span class="en">summer — im Sommer</span></div>
+            <div class="vocab-row"><span class="de"><strong>der Herbst</strong></span><span class="en">autumn / fall — im Herbst</span></div>
+            <div class="vocab-row"><span class="de"><strong>der Winter</strong></span><span class="en">winter — im Winter</span></div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p><strong>Wie ist das Wetter?</strong> (What's the weather like?) · <strong>Was ist die Wettervorhersage?</strong> (What's the forecast?)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BODY PARTS -->
+      <section id="body-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Body Parts — der Körper</h2>
+            <p class="card-subtitle">Essential vocabulary for health, directions & more</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Head & Face — Kopf & Gesicht</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Kopf</span><span class="en">head</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Gesicht</span><span class="en">face</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Haar / die Haare</span><span class="en">hair</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Auge / die Augen</span><span class="en">eye / eyes</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Nase</span><span class="en">nose</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Mund</span><span class="en">mouth</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Lippe / die Lippen</span><span class="en">lip / lips</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Ohr / die Ohren</span><span class="en">ear / ears</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Zahn / die Zähne</span><span class="en">tooth / teeth</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Stirn</span><span class="en">forehead</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Kinn</span><span class="en">chin</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Wange</span><span class="en">cheek</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Body — der Körper</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Hals</span><span class="en">neck / throat</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Schulter</span><span class="en">shoulder</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Arm</span><span class="en">arm</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Hand / die Hände</span><span class="en">hand / hands</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Finger</span><span class="en">finger</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Brust</span><span class="en">chest</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Bauch</span><span class="en">stomach / belly</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Rücken</span><span class="en">back</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Bein</span><span class="en">leg</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Knie</span><span class="en">knee</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Fuß / die Füße</span><span class="en">foot / feet</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Haut</span><span class="en">skin</span></div>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub-heading" style="margin-top:1.25rem">Internal Organs & Medical</h3>
+          <div class="vocab-list">
+            <div class="vocab-row"><span class="de"><span class="das-text">das</span> Herz</span><span class="en">heart</span></div>
+            <div class="vocab-row"><span class="de"><span class="die-text">die</span> Lunge</span><span class="en">lung</span></div>
+            <div class="vocab-row"><span class="de"><span class="die-text">die</span> Leber</span><span class="en">liver</span></div>
+            <div class="vocab-row"><span class="de"><span class="das-text">das</span> Gehirn</span><span class="en">brain</span></div>
+            <div class="vocab-row"><span class="de">Ich habe Schmerzen im…</span><span class="en">I have pain in my…</span></div>
+            <div class="vocab-row"><span class="de">Mir tut der Bauch weh.</span><span class="en">My stomach hurts.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAMILY -->
+      <section id="family-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Family — die Familie</h2>
+            <p class="card-subtitle">Talking about your relatives in German</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Immediate Family — Kernfamilie</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Familie</span><span class="en">family</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Vater / Papa</span><span class="en">father / dad</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Mutter / Mama</span><span class="en">mother / mum</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Eltern</span><span class="en">parents (always plural)</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Bruder</span><span class="en">brother</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Schwester</span><span class="en">sister</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Geschwister</span><span class="en">siblings (always plural)</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Sohn</span><span class="en">son</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Tochter</span><span class="en">daughter</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Kind / die Kinder</span><span class="en">child / children</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Ehemann</span><span class="en">husband</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Ehefrau</span><span class="en">wife</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Extended Family — Großfamilie</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Großvater / Opa</span><span class="en">grandfather / grandpa</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Großmutter / Oma</span><span class="en">grandmother / grandma</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Großeltern</span><span class="en">grandparents</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Onkel</span><span class="en">uncle</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Tante</span><span class="en">aunt</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Cousin</span><span class="en">cousin (m)</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Cousine</span><span class="en">cousin (f)</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Neffe</span><span class="en">nephew</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Nichte</span><span class="en">niece</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Schwiegervater</span><span class="en">father-in-law</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Schwiegermutter</span><span class="en">mother-in-law</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Schwager</span><span class="en">brother-in-law</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p><strong>Ich habe zwei Geschwister.</strong> (I have two siblings.) · <strong>Meine Familie ist groß.</strong> (My family is big.) · <strong>Wie viele Geschwister hast du?</strong> (How many siblings do you have?)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANIMALS -->
+      <section id="animals-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Animals — die Tiere</h2>
+            <p class="card-subtitle">Pets, farm animals, and wild animals</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">🐾 Pets — Haustiere</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Hund</span><span class="en">dog</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Katze</span><span class="en">cat</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Fisch</span><span class="en">fish</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Vogel</span><span class="en">bird</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Kaninchen</span><span class="en">rabbit</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Hamster</span><span class="en">hamster</span></div>
+              </div>
+              <h3 class="sub-heading" style="margin-top:1rem">🐄 Farm — Bauernhoftiere</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Kuh</span><span class="en">cow</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Schwein</span><span class="en">pig</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Pferd</span><span class="en">horse</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Schaf</span><span class="en">sheep</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Ziege</span><span class="en">goat</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Huhn</span><span class="en">chicken</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">🦁 Wild Animals — Wildtiere</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Löwe</span><span class="en">lion</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Tiger</span><span class="en">tiger</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Bär</span><span class="en">bear</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Wolf</span><span class="en">wolf</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Fuchs</span><span class="en">fox</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Hirsch</span><span class="en">deer</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Schlange</span><span class="en">snake</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Krokodil</span><span class="en">crocodile</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Affe</span><span class="en">monkey / ape</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Elefant</span><span class="en">elephant</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Giraffe</span><span class="en">giraffe</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Delfin</span><span class="en">dolphin</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Hai</span><span class="en">shark</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Adler</span><span class="en">eagle</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSPORT -->
+      <section id="transport-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Transport — Verkehrsmittel</h2>
+            <p class="card-subtitle">Getting around in German-speaking countries</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Vehicles — Fahrzeuge</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Auto</span><span class="en">car</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Bus</span><span class="en">bus</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> U-Bahn</span><span class="en">subway / underground</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> S-Bahn</span><span class="en">suburban train</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Zug</span><span class="en">train</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Flugzeug</span><span class="en">airplane</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Schiff</span><span class="en">ship</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Fahrrad</span><span class="en">bicycle</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Motorrad</span><span class="en">motorcycle</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Straßenbahn</span><span class="en">tram</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Taxi</span><span class="en">taxi</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Places & Phrases</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Bahnhof</span><span class="en">train station</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Flughafen</span><span class="en">airport</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Haltestelle</span><span class="en">stop (bus/tram)</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Fahrplan</span><span class="en">timetable / schedule</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Fahrkarte</span><span class="en">ticket</span></div>
+                <div class="vocab-row"><span class="de">Ich fahre mit dem Bus.</span><span class="en">I go by bus.</span></div>
+                <div class="vocab-row"><span class="de">Ich nehme die U-Bahn.</span><span class="en">I take the subway.</span></div>
+                <div class="vocab-row"><span class="de">Wie komme ich zum…?</span><span class="en">How do I get to…?</span></div>
+                <div class="vocab-row"><span class="de">Wann fährt der nächste Zug?</span><span class="en">When does the next train leave?</span></div>
+                <div class="vocab-row"><span class="de">Wo ist die nächste Haltestelle?</span><span class="en">Where is the nearest stop?</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="tip-block">
+            <span class="tip-icon">💡</span>
+            <p>To say how you travel use <strong>mit + Dativ</strong>: <em>mit dem Auto, mit dem Zug, mit der U-Bahn</em>. To fly: <em>mit dem Flugzeug fliegen</em>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCHOOL & UNIVERSITY -->
+      <section id="school-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">School & University — Schule & Universität</h2>
+            <p class="card-subtitle">Academic vocabulary for everyday use</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">School — die Schule</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Schule</span><span class="en">school</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Klasse</span><span class="en">class / grade</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Unterricht</span><span class="en">lesson / instruction</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Fach / die Fächer</span><span class="en">subject / subjects</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Note / die Noten</span><span class="en">grade / grades</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Hausaufgaben (pl)</span><span class="en">homework</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Prüfung</span><span class="en">exam / test</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Lehrer / die Lehrerin</span><span class="en">teacher (m/f)</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Pause</span><span class="en">break / recess</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Bibliothek</span><span class="en">library</span></div>
+              </div>
+              <h3 class="sub-heading" style="margin-top:1rem">Subjects — Schulfächer</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">Mathematik / Mathe</span><span class="en">math</span></div>
+                <div class="vocab-row"><span class="de">Deutsch</span><span class="en">German</span></div>
+                <div class="vocab-row"><span class="de">Englisch</span><span class="en">English</span></div>
+                <div class="vocab-row"><span class="de">Geschichte</span><span class="en">history</span></div>
+                <div class="vocab-row"><span class="de">Geographie / Erdkunde</span><span class="en">geography</span></div>
+                <div class="vocab-row"><span class="de">Biologie</span><span class="en">biology</span></div>
+                <div class="vocab-row"><span class="de">Physik</span><span class="en">physics</span></div>
+                <div class="vocab-row"><span class="de">Chemie</span><span class="en">chemistry</span></div>
+                <div class="vocab-row"><span class="de">Informatik</span><span class="en">computer science</span></div>
+                <div class="vocab-row"><span class="de">Kunst</span><span class="en">art</span></div>
+                <div class="vocab-row"><span class="de">Sport</span><span class="en">PE / sports</span></div>
+                <div class="vocab-row"><span class="de">Musik</span><span class="en">music</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">University — die Universität</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Universität / Uni</span><span class="en">university</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Fachhochschule / FH</span><span class="en">university of applied sciences</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Studiengang</span><span class="en">degree program / major</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Abschluss</span><span class="en">degree / graduation</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Semester</span><span class="en">semester</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Vorlesung</span><span class="en">lecture</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Seminar</span><span class="en">seminar</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Hausarbeit</span><span class="en">term paper</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Bachelorarbeit</span><span class="en">bachelor's thesis</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Professor / die Professorin</span><span class="en">professor (m/f)</span></div>
+                <div class="vocab-row"><span class="de">studieren</span><span class="en">to study (at university)</span></div>
+                <div class="vocab-row"><span class="de">sich einschreiben</span><span class="en">to enroll / register</span></div>
+                <div class="vocab-row"><span class="de">bestehen / durchfallen</span><span class="en">to pass / to fail</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECHNOLOGY & SOCIAL MEDIA -->
+      <section id="tech-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Vocabulary</span>
+            <h2 class="card-title">Technology & Social Media — Technologie & soziale Medien</h2>
+            <p class="card-subtitle">Digital vocabulary for the modern world</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <h3 class="sub-heading">Devices — Geräte</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Smartphone / Handy</span><span class="en">smartphone / mobile phone</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Computer / PC</span><span class="en">computer / PC</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Laptop</span><span class="en">laptop</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Tablet</span><span class="en">tablet</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Tastatur</span><span class="en">keyboard</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Maus</span><span class="en">mouse</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Bildschirm</span><span class="en">screen / monitor</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Internet</span><span class="en">internet</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> WLAN / Wi-Fi</span><span class="en">Wi-Fi</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> App</span><span class="en">app</span></div>
+              </div>
+              <h3 class="sub-heading" style="margin-top:1rem">Actions — Online-Aktivitäten</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">herunterladen</span><span class="en">to download</span></div>
+                <div class="vocab-row"><span class="de">hochladen</span><span class="en">to upload</span></div>
+                <div class="vocab-row"><span class="de">tippen</span><span class="en">to type</span></div>
+                <div class="vocab-row"><span class="de">googeln</span><span class="en">to google / search</span></div>
+                <div class="vocab-row"><span class="de">streamen</span><span class="en">to stream</span></div>
+                <div class="vocab-row"><span class="de">chatten</span><span class="en">to chat</span></div>
+                <div class="vocab-row"><span class="de">liken / einen Like geben</span><span class="en">to like (a post)</span></div>
+                <div class="vocab-row"><span class="de">kommentieren</span><span class="en">to comment</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="sub-heading">Social Media — Soziale Medien</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> sozialen Medien</span><span class="en">social media</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Profil</span><span class="en">profile</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Beitrag / Post</span><span class="en">post / entry</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Kommentar</span><span class="en">comment</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> Nachricht</span><span class="en">message</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Link</span><span class="en">link</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Hashtag</span><span class="en">hashtag</span></div>
+                <div class="vocab-row"><span class="de"><span class="der-text">der</span> Follower</span><span class="en">follower</span></div>
+                <div class="vocab-row"><span class="de"><span class="das-text">das</span> Passwort</span><span class="en">password</span></div>
+                <div class="vocab-row"><span class="de"><span class="die-text">die</span> E-Mail</span><span class="en">email</span></div>
+              </div>
+              <h3 class="sub-heading" style="margin-top:1rem">Common Phrases</h3>
+              <div class="vocab-list">
+                <div class="vocab-row"><span class="de">Hast du WLAN?</span><span class="en">Do you have Wi-Fi?</span></div>
+                <div class="vocab-row"><span class="de">Was ist das Passwort?</span><span class="en">What's the password?</span></div>
+                <div class="vocab-row"><span class="de">Schick mir eine Nachricht.</span><span class="en">Send me a message.</span></div>
+                <div class="vocab-row"><span class="de">Der Akku ist leer.</span><span class="en">The battery is dead.</span></div>
+                <div class="vocab-row"><span class="de">Mein Handy ist kaputt.</span><span class="en">My phone is broken.</span></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -2197,6 +3103,101 @@
             <button class="tool-btn" id="conjBtn">Conjugate</button>
           </div>
           <div class="conj-result" id="conjResult"></div>
+        </div>
+      </section>
+
+      <!-- FLASHCARDS -->
+      <section id="flashcard-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Tool</span>
+            <h2 class="card-title">Flashcards — Lernkarten</h2>
+            <p class="card-subtitle">Flip to reveal the translation</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="flashcard-wrap">
+            <div class="flashcard-controls-top" id="flashcardFilters">
+              <button class="flashcard-filter-btn active" data-fc-filter="nouns">Nouns</button>
+              <button class="flashcard-filter-btn" data-fc-filter="verbs">Verbs</button>
+              <button class="flashcard-filter-btn" data-fc-filter="adjectives">Adjectives</button>
+            </div>
+            <div class="flashcard" id="flashcard" title="Click to flip">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <span class="flashcard-hint">German</span>
+                  <span class="flashcard-article" id="fcArticle"></span>
+                  <span class="flashcard-word" id="fcWord">—</span>
+                </div>
+                <div class="flashcard-back">
+                  <span class="flashcard-hint">English</span>
+                  <span class="flashcard-translation" id="fcTranslation">—</span>
+                  <span class="flashcard-extra" id="fcExtra"></span>
+                </div>
+              </div>
+            </div>
+            <span class="flashcard-flip-hint">👆 Click or swipe up/down to flip · ← → to navigate</span>
+            <div class="flashcard-nav">
+              <button class="flashcard-nav-btn" id="fcPrev">‹</button>
+              <span class="flashcard-counter" id="fcCounter">1 / 1</span>
+              <button class="flashcard-nav-btn" id="fcNext">›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILL IN THE BLANK -->
+      <section id="fitb-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Tool</span>
+            <h2 class="card-title">Fill in the Blank — Lückentext</h2>
+            <p class="card-subtitle">Complete the sentence with the correct word form</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="fitb-wrap">
+            <div class="fitb-score-row">
+              <span>Score: <strong id="fitbScore">0</strong> / <strong id="fitbTotal">0</strong></span>
+              <span id="fitbStreak"></span>
+            </div>
+            <div class="fitb-sentence" id="fitbSentence">Loading…</div>
+            <div class="fitb-actions">
+              <button class="fitb-check-btn" id="fitbCheckBtn">Check ✓</button>
+              <button class="fitb-hint-btn" id="fitbHintBtn">Hint 💡</button>
+              <button class="fitb-next-btn" id="fitbNextBtn">Next →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MATCHING GAME -->
+      <section id="matching-section" class="card reveal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-tag">Tool</span>
+            <h2 class="card-title">Matching Game — Zuordnungsspiel</h2>
+            <p class="card-subtitle">Connect the German word to its English meaning</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="match-game-wrap">
+            <div class="match-score-row">
+              <span>Matched: <strong id="matchScore">0</strong> / <strong id="matchTotal">0</strong></span>
+              <button class="match-new-btn" id="matchNewBtn">↻ New Round</button>
+            </div>
+            <div class="match-grid">
+              <div class="match-col">
+                <div class="match-col-label">🇩🇪 Deutsch</div>
+                <div id="matchColDE"></div>
+              </div>
+              <div class="match-col">
+                <div class="match-col-label">🇬🇧 English</div>
+                <div id="matchColEN"></div>
+              </div>
+            </div>
+            <div id="matchSuccess"></div>
+          </div>
         </div>
       </section>
 
