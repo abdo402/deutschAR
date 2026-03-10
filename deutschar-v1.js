@@ -159,7 +159,7 @@ const wordBank = {
     {
       infinitive: "essen", english: "to eat", type: "irregular", level: 2,
       conjugations: { "ich": "esse", "du": "isst", "er/sie/es": "isst", "wir": "essen", "ihr": "esst", "sie/Sie": "essen" },
-      praeteritum:  { "ich": "aß", "du": "aßt", "er/sie/es": "aß", "wir": "aßen", "ihr": "aßt", "sie/Sie": "aßen" }
+      praeteritum:  { "ich": "aß", "du": "aßest", "er/sie/es": "aß", "wir": "aßen", "ihr": "aßt", "sie/Sie": "aßen" }
     },
     {
       infinitive: "geben", english: "to give", type: "irregular", level: 2,
@@ -253,7 +253,7 @@ const wordBank = {
       praeteritum:  { "ich": "stand", "du": "standst", "er/sie/es": "stand", "wir": "standen", "ihr": "standt", "sie/Sie": "standen" }
     },
     {
-      infinitive: "sitzen", english: "to sit", type: "regular", level: 3,
+      infinitive: "sitzen", english: "to sit", type: "irregular", level: 3,
       conjugations: { "ich": "sitze", "du": "sitzt", "er/sie/es": "sitzt", "wir": "sitzen", "ihr": "sitzt", "sie/Sie": "sitzen" },
       praeteritum:  { "ich": "saß", "du": "saßt", "er/sie/es": "saß", "wir": "saßen", "ihr": "saßt", "sie/Sie": "saßen" }
     },
@@ -534,12 +534,21 @@ initReveal();
 // ═══════════════════════════════════════
 // RENDER WORD BANK — NOUNS
 // ═══════════════════════════════════════
+let nounLevelActive = 'all';
+
 function renderNouns(filter = '') {
   const tbody = document.getElementById('nounTableBody');
-  const filtered = wordBank.nouns.filter(n =>
-    n.german.toLowerCase().includes(filter.toLowerCase()) ||
-    n.english.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filtered = wordBank.nouns.filter(n => {
+    const matchText = n.german.toLowerCase().includes(filter.toLowerCase()) ||
+                      n.english.toLowerCase().includes(filter.toLowerCase());
+    const matchLevel = nounLevelActive === 'all' || String(n.level) === nounLevelActive;
+    return matchText && matchLevel;
+  });
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1.5rem">No nouns found for this filter.</td></tr>`;
+    return;
+  }
 
   tbody.innerHTML = filtered.map(n => `
     <tr>
@@ -554,16 +563,33 @@ function renderNouns(filter = '') {
 
 renderNouns();
 document.getElementById('nounSearch').addEventListener('input', e => renderNouns(e.target.value));
+document.querySelectorAll('#nounLevelFilter .level-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#nounLevelFilter .level-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    nounLevelActive = btn.dataset.level;
+    renderNouns(document.getElementById('nounSearch').value);
+  });
+});
 
 // ═══════════════════════════════════════
 // RENDER WORD BANK — VERBS
 // ═══════════════════════════════════════
+let verbLevelActive = 'all';
+
 function renderVerbs(filter = '') {
   const container = document.getElementById('verbsContainer');
-  const filtered = wordBank.verbs.filter(v =>
-    v.infinitive.toLowerCase().includes(filter.toLowerCase()) ||
-    v.english.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filtered = wordBank.verbs.filter(v => {
+    const matchText = v.infinitive.toLowerCase().includes(filter.toLowerCase()) ||
+                      v.english.toLowerCase().includes(filter.toLowerCase());
+    const matchLevel = verbLevelActive === 'all' || String(v.level) === verbLevelActive;
+    return matchText && matchLevel;
+  });
+
+  if (!filtered.length) {
+    container.innerHTML = `<p style="color:var(--text-muted);padding:1rem 0">No verbs found for this filter.</p>`;
+    return;
+  }
 
   container.innerHTML = filtered.map(v => `
     <div class="verb-card">
@@ -588,16 +614,33 @@ function renderVerbs(filter = '') {
 
 renderVerbs();
 document.getElementById('verbSearch').addEventListener('input', e => renderVerbs(e.target.value));
+document.querySelectorAll('#verbLevelFilter .level-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#verbLevelFilter .level-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    verbLevelActive = btn.dataset.level;
+    renderVerbs(document.getElementById('verbSearch').value);
+  });
+});
 
 // ═══════════════════════════════════════
 // RENDER WORD BANK — ADJECTIVES
 // ═══════════════════════════════════════
+let adjLevelActive = 'all';
+
 function renderAdjectives(filter = '') {
   const tbody = document.getElementById('adjTableBody');
-  const filtered = wordBank.adjectives.filter(a =>
-    a.german.toLowerCase().includes(filter.toLowerCase()) ||
-    a.english.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filtered = wordBank.adjectives.filter(a => {
+    const matchText = a.german.toLowerCase().includes(filter.toLowerCase()) ||
+                      a.english.toLowerCase().includes(filter.toLowerCase());
+    const matchLevel = adjLevelActive === 'all' || String(a.level) === adjLevelActive;
+    return matchText && matchLevel;
+  });
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1.5rem">No adjectives found for this filter.</td></tr>`;
+    return;
+  }
 
   tbody.innerHTML = filtered.map(a => `
     <tr>
@@ -612,6 +655,14 @@ function renderAdjectives(filter = '') {
 
 renderAdjectives();
 document.getElementById('adjSearch').addEventListener('input', e => renderAdjectives(e.target.value));
+document.querySelectorAll('#adjLevelFilter .level-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#adjLevelFilter .level-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    adjLevelActive = btn.dataset.level;
+    renderAdjectives(document.getElementById('adjSearch').value);
+  });
+});
 
 // ═══════════════════════════════════════
 // GLOBAL WORD SEARCH TOOL
@@ -886,6 +937,750 @@ document.getElementById('sidebarSearch').addEventListener('input', function() {
 });
 
 // ═══════════════════════════════════════
+// WORD OF THE DAY
+// ═══════════════════════════════════════
+const wotdAllWords = [
+  ...wordBank.nouns.map(n => ({
+    de: `${n.article} ${n.german}`, en: n.english, article: n.article,
+    type: 'noun', plural: n.plural, opposite: n.opposite || ''
+  })),
+  ...wordBank.verbs.map(v => ({
+    de: v.infinitive, en: v.english, article: '',
+    type: 'verb', verbType: v.type,
+    ichForm: v.conjugations['ich'],
+    erForm: v.conjugations['er/sie/es']
+  })),
+  ...wordBank.adjectives.map(a => ({
+    de: a.german, en: a.english, article: '',
+    type: 'adjective', comparative: a.comparative, superlative: a.superlative,
+    opposite: a.opposite || ''
+  }))
+];
+
+let wotdCurrentWord = null;
+
+function showWotd(word) {
+  wotdCurrentWord = word;
+  const deEl = document.getElementById('wotdDe');
+  const enEl = document.getElementById('wotdEn');
+  if (!deEl || !enEl) return;
+  if (word.article) {
+    deEl.innerHTML = `<span class="wotd-article ${word.article}-text">${word.article}</span> ${word.de.replace(/^\S+\s/, '')}`;
+  } else {
+    deEl.textContent = word.de;
+  }
+  enEl.textContent = '— ' + word.en;
+}
+
+function openWotdModal(word) {
+  const overlay = document.getElementById('wotdModalOverlay');
+  const body    = document.getElementById('wotdModalBody');
+  if (!overlay || !body || !word) return;
+
+  // Build the word display
+  let wordDisplay = '';
+  if (word.article) {
+    wordDisplay = `<span class="wotd-modal-article ${word.article}-text">${word.article}</span>`;
+  }
+
+  // Build detail rows
+  const rows = [];
+  rows.push(`<div class="wotd-modal-row">
+    <span class="wotd-modal-row-label">Type</span>
+    <span class="wotd-modal-row-value">${word.type}</span>
+  </div>`);
+
+  if (word.type === 'noun') {
+    if (word.plural) rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">Plural</span>
+      <span class="wotd-modal-row-value">${word.plural}</span>
+    </div>`);
+    if (word.opposite) rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">Opposite</span>
+      <span class="wotd-modal-row-value">${word.opposite}</span>
+    </div>`);
+  } else if (word.type === 'verb') {
+    rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">ich form</span>
+      <span class="wotd-modal-row-value">${word.ichForm || '—'}</span>
+    </div>`);
+    rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">er/sie/es</span>
+      <span class="wotd-modal-row-value">${word.erForm || '—'}</span>
+    </div>`);
+    rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">Conjugation</span>
+      <span class="wotd-modal-row-value">${word.verbType}</span>
+    </div>`);
+  } else if (word.type === 'adjective') {
+    rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">Comparative</span>
+      <span class="wotd-modal-row-value">${word.comparative}</span>
+    </div>`);
+    rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">Superlative</span>
+      <span class="wotd-modal-row-value">${word.superlative}</span>
+    </div>`);
+    if (word.opposite) rows.push(`<div class="wotd-modal-row">
+      <span class="wotd-modal-row-label">Opposite</span>
+      <span class="wotd-modal-row-value">${word.opposite}</span>
+    </div>`);
+  }
+
+  body.innerHTML = `
+    <div class="wotd-modal-word">
+      <span class="wotd-modal-de">${wordDisplay}${word.article ? word.de.replace(/^\S+\s/, '') : word.de}</span>
+      <span class="wotd-modal-en">${word.en}</span>
+    </div>
+    ${rows.join('')}
+  `;
+
+  overlay.classList.add('open');
+}
+
+function closeWotdModal() {
+  document.getElementById('wotdModalOverlay')?.classList.remove('open');
+}
+
+function pickWotd() {
+  const saved = localStorage.getItem('deutschar-wotd');
+  const savedDate = localStorage.getItem('deutschar-wotd-date');
+  const today = new Date().toDateString();
+  if (saved && savedDate === today) {
+    showWotd(JSON.parse(saved));
+  } else {
+    const word = wotdAllWords[Math.floor(Math.random() * wotdAllWords.length)];
+    localStorage.setItem('deutschar-wotd', JSON.stringify(word));
+    localStorage.setItem('deutschar-wotd-date', today);
+    showWotd(word);
+  }
+}
+
+const wotdNewBtn = document.getElementById('wotdNewBtn');
+if (wotdNewBtn) {
+  wotdNewBtn.addEventListener('click', () => {
+    const word = wotdAllWords[Math.floor(Math.random() * wotdAllWords.length)];
+    localStorage.setItem('deutschar-wotd', JSON.stringify(word));
+    localStorage.setItem('deutschar-wotd-date', new Date().toDateString());
+    showWotd(word);
+  });
+}
+
+const wotdLearnBtn = document.getElementById('wotdLearnBtn');
+if (wotdLearnBtn) wotdLearnBtn.addEventListener('click', () => openWotdModal(wotdCurrentWord));
+
+document.getElementById('wotdModalClose')?.addEventListener('click', closeWotdModal);
+document.getElementById('wotdModalOverlay')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeWotdModal();
+});
+
+pickWotd();
+
+// ═══════════════════════════════════════
+// BOOKMARKS
+// ═══════════════════════════════════════
+function getBookmarks() {
+  try { return JSON.parse(localStorage.getItem('deutschar-bookmarks') || '[]'); }
+  catch { return []; }
+}
+function saveBookmarks(bm) {
+  localStorage.setItem('deutschar-bookmarks', JSON.stringify(bm));
+}
+
+function renderBookmarksPanel() {
+  const list = document.getElementById('bookmarksList');
+  const btn = document.getElementById('topbarBookmarkBtn');
+  const dashBm = document.getElementById('dashBookmarks');
+  const bm = getBookmarks();
+  if (!list) return;
+  if (dashBm) dashBm.textContent = bm.length;
+  const bmBar = document.getElementById('dashBookmarksBar');
+  if (bmBar) bmBar.style.width = Math.min((bm.length / 10) * 100, 100) + '%';
+  if (btn) btn.classList.toggle('has-bookmarks', bm.length > 0);
+  if (!bm.length) {
+    list.innerHTML = '<p class="bookmarks-empty">No bookmarks yet. Click ☆ on any section to save it.</p>';
+    return;
+  }
+  list.innerHTML = bm.map(b => `
+    <a href="#${b.id}" class="bookmark-item" onclick="closeBookmarksPanel()">
+      <span class="bookmark-item-icon">⭐</span>
+      <span>${b.title}</span>
+    </a>
+  `).join('');
+}
+
+function injectBookmarkButtons() {
+  document.querySelectorAll('section.card[id]').forEach(section => {
+    const titleGroup = section.querySelector('.card-title-group');
+    const header = section.querySelector('.card-header');
+    if (!titleGroup || !header) return;
+    if (header.querySelector('.bookmark-btn')) return;
+    const btn = document.createElement('button');
+    btn.className = 'bookmark-btn';
+    btn.setAttribute('data-section-id', section.id);
+    btn.title = 'Bookmark this section';
+    const bm = getBookmarks();
+    const isBookmarked = bm.some(b => b.id === section.id);
+    btn.textContent = isBookmarked ? '⭐' : '☆';
+    if (isBookmarked) btn.classList.add('bookmarked');
+    btn.addEventListener('click', () => toggleBookmark(section, btn));
+    // Append to card-controls if exists, else create one
+    let controls = header.querySelector('.card-controls');
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.className = 'card-controls';
+      header.appendChild(controls);
+    }
+    controls.appendChild(btn);
+  });
+}
+
+function toggleBookmark(section, btn) {
+  const id = section.id;
+  const title = section.querySelector('.card-title')?.textContent || id;
+  let bm = getBookmarks();
+  const idx = bm.findIndex(b => b.id === id);
+  if (idx === -1) {
+    bm.push({ id, title });
+    btn.textContent = '⭐';
+    btn.classList.add('bookmarked');
+  } else {
+    bm.splice(idx, 1);
+    btn.textContent = '☆';
+    btn.classList.remove('bookmarked');
+  }
+  saveBookmarks(bm);
+  renderBookmarksPanel();
+}
+
+function closeBookmarksPanel() {
+  document.getElementById('bookmarksPanel')?.classList.remove('open');
+}
+
+const topbarBookmarkBtn = document.getElementById('topbarBookmarkBtn');
+const bookmarksPanel = document.getElementById('bookmarksPanel');
+const bookmarksClose = document.getElementById('bookmarksClose');
+
+if (topbarBookmarkBtn) topbarBookmarkBtn.addEventListener('click', () => {
+  bookmarksPanel?.classList.toggle('open');
+  renderBookmarksPanel();
+});
+if (bookmarksClose) bookmarksClose.addEventListener('click', closeBookmarksPanel);
+
+injectBookmarkButtons();
+renderBookmarksPanel();
+
+// ═══════════════════════════════════════
+// CTRL+K GLOBAL SEARCH OVERLAY
+// ═══════════════════════════════════════
+const searchOverlay = document.getElementById('searchOverlay');
+const overlayInput  = document.getElementById('overlaySearchInput');
+const overlayResults = document.getElementById('overlaySearchResults');
+
+// Section nav index
+const sectionIndex = [
+  { id: 'alphabet-section',         title: 'Alphabet & Pronunciation',        type: 'Basics' },
+  { id: 'numbers-section',          title: 'Numbers — Zahlen',                type: 'Basics' },
+  { id: 'greetings-section',        title: 'Greetings — Begrüßungen',         type: 'Basics' },
+  { id: 'colors-section',           title: 'Colors — Farben',                 type: 'Basics' },
+  { id: 'days-section',             title: 'Days & Months',                   type: 'Basics' },
+  { id: 'time-section',             title: 'Time Expressions — die Zeit',     type: 'Basics' },
+  { id: 'articles-section',         title: 'Articles — der / die / das',      type: 'Grammar' },
+  { id: 'cases-section',            title: 'Cases — Die Fälle',               type: 'Grammar' },
+  { id: 'conjugation-section',      title: 'Verb Conjugation',                type: 'Grammar' },
+  { id: 'praeteritum-section',      title: 'Simple Past — Präteritum',        type: 'Grammar' },
+  { id: 'modal-section',            title: 'Modal Verbs',                     type: 'Grammar' },
+  { id: 'wordorder-section',        title: 'Word Order',                      type: 'Grammar' },
+  { id: 'wfragen-section',          title: 'W-Questions — W-Fragen',          type: 'Grammar' },
+  { id: 'separable-section',        title: 'Separable Verbs',                 type: 'Grammar' },
+  { id: 'prepositions-section',     title: 'Local Prepositions',              type: 'Grammar' },
+  { id: 'adjectives-grammar-section', title: 'Adjective Endings',            type: 'Grammar' },
+  { id: 'perfect-section',          title: 'Perfect Tense — Perfekt',         type: 'Grammar' },
+  { id: 'passive-section',          title: 'Passive Voice — Passiv',          type: 'Grammar' },
+  { id: 'konjunktiv-section',       title: 'Konjunktiv II',                   type: 'Grammar' },
+  { id: 'subconj-section',          title: 'Subordinating Conjunctions',      type: 'Grammar' },
+  { id: 'relative-section',         title: 'Relative Clauses',                type: 'Grammar' },
+  { id: 'ordinals-section',         title: 'Ordinal Numbers',                 type: 'Grammar' },
+  { id: 'nouns-section',            title: 'Nouns — Nomen',                   type: 'Vocabulary' },
+  { id: 'verbs-section',            title: 'Verbs — Verben',                  type: 'Vocabulary' },
+  { id: 'adj-section',              title: 'Adjectives — Adjektive',          type: 'Vocabulary' },
+  { id: 'fruits-section',           title: 'Fruits — Früchte',                type: 'Vocabulary' },
+  { id: 'adverbs-section',          title: 'Adverbs — Adverbien',             type: 'Vocabulary' },
+  { id: 'rooms-section',            title: 'Rooms & Furniture',               type: 'Vocabulary' },
+  { id: 'food-section',             title: 'Food & Drinks',                   type: 'Vocabulary' },
+  { id: 'jobs-section',             title: 'Jobs & Professions',              type: 'Vocabulary' },
+  { id: 'clothing-section',         title: 'Clothing & Shopping',             type: 'Vocabulary' },
+  { id: 'opposites-section',        title: 'Opposites — Gegenteile',          type: 'Vocabulary' },
+  { id: 'countries-section',        title: 'Countries — Länder',              type: 'Vocabulary' },
+  { id: 'weather-section',          title: 'Weather — das Wetter',            type: 'Vocabulary' },
+  { id: 'body-section',             title: 'Body Parts — der Körper',         type: 'Vocabulary' },
+  { id: 'family-section',           title: 'Family — die Familie',            type: 'Vocabulary' },
+  { id: 'animals-section',          title: 'Animals — die Tiere',             type: 'Vocabulary' },
+  { id: 'transport-section',        title: 'Transport — Verkehrsmittel',      type: 'Vocabulary' },
+  { id: 'school-section',           title: 'School & University',             type: 'Vocabulary' },
+  { id: 'tech-section',             title: 'Technology & Social Media',       type: 'Vocabulary' },
+  { id: 'travel-section',           title: 'Travel — Reisen',                 type: 'Phrases' },
+  { id: 'phrasebook-section',       title: 'Phrasebook — Gespräche',          type: 'Phrases' },
+  { id: 'wordsearch-section',       title: 'Word Search',                     type: 'Tool' },
+  { id: 'genderquiz-section',       title: 'Gender Quiz',                     type: 'Tool' },
+  { id: 'verbconjugator-section',   title: 'Verb Conjugator',                 type: 'Tool' },
+  { id: 'flashcard-section',        title: 'Flashcards',                      type: 'Tool' },
+  { id: 'fitb-section',             title: 'Fill in the Blank',               type: 'Tool' },
+  { id: 'matching-section',         title: 'Matching Game',                   type: 'Tool' },
+];
+
+function openSearchOverlay() {
+  searchOverlay?.classList.add('open');
+  overlayInput?.focus();
+  overlayInput && (overlayInput.value = '');
+  renderOverlayResults('');
+}
+function closeSearchOverlay() {
+  searchOverlay?.classList.remove('open');
+}
+
+function renderOverlayResults(q) {
+  if (!overlayResults) return;
+  if (!q) {
+    overlayResults.innerHTML = '<p class="search-modal-hint">Type to search across all vocabulary and grammar…</p>';
+    return;
+  }
+  const ql = q.toLowerCase();
+  const results = [];
+
+  // Sections
+  sectionIndex.forEach(s => {
+    if (s.title.toLowerCase().includes(ql)) {
+      results.push({ href: '#' + s.id, type: s.type, de: s.title, en: '' });
+    }
+  });
+
+  // Word bank
+  wordBank.nouns.forEach(n => {
+    if (n.german.toLowerCase().includes(ql) || n.english.toLowerCase().includes(ql)) {
+      results.push({ href: '#nouns-section', type: 'noun', de: `${n.article} ${n.german}`, en: n.english });
+    }
+  });
+  wordBank.verbs.forEach(v => {
+    if (v.infinitive.toLowerCase().includes(ql) || v.english.toLowerCase().includes(ql)) {
+      results.push({ href: '#verbs-section', type: 'verb', de: v.infinitive, en: v.english });
+    }
+  });
+  wordBank.adjectives.forEach(a => {
+    if (a.german.toLowerCase().includes(ql) || a.english.toLowerCase().includes(ql)) {
+      results.push({ href: '#adj-section', type: 'adjective', de: a.german, en: a.english });
+    }
+  });
+
+  if (!results.length) {
+    overlayResults.innerHTML = '<p class="search-modal-hint">No results found. Try a different search.</p>';
+    return;
+  }
+
+  overlayResults.innerHTML = results.slice(0, 20).map(r => `
+    <a href="${r.href}" class="search-modal-item" onclick="closeSearchOverlay()">
+      <span class="smi-type">${r.type}</span>
+      <span class="smi-de">${r.de}</span>
+      ${r.en ? `<span class="smi-en">${r.en}</span>` : ''}
+    </a>
+  `).join('');
+}
+
+if (overlayInput) overlayInput.addEventListener('input', e => renderOverlayResults(e.target.value));
+document.getElementById('overlaySearchClose')?.addEventListener('click', closeSearchOverlay);
+document.getElementById('searchTrigger')?.addEventListener('click', openSearchOverlay);
+searchOverlay?.addEventListener('click', e => { if (e.target === searchOverlay) closeSearchOverlay(); });
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearchOverlay(); }
+  if (e.key === 'Escape') {
+    closeSearchOverlay();
+    closeWotdModal();
+  }
+});
+
+// ═══════════════════════════════════════
+// STATS DASHBOARD
+// ═══════════════════════════════════════
+function getVisitedSections() {
+  try { return JSON.parse(localStorage.getItem('deutschar-visited') || '[]'); }
+  catch { return []; }
+}
+function getDoneSections() {
+  try { return JSON.parse(localStorage.getItem('deutschar-done') || '[]'); }
+  catch { return []; }
+}
+
+function updateDashboard() {
+  const visited = getVisitedSections();
+  const done = getDoneSections();
+  const total = sectionIndex.length;
+  const bm = getBookmarks();
+
+  const dashS = document.getElementById('dashSections');
+  const dashSBar = document.getElementById('dashSectionsBar');
+  const dashD = document.getElementById('dashDone');
+  const dashDBar = document.getElementById('dashDoneBar');
+  const dashBm = document.getElementById('dashBookmarks');
+
+  if (dashS) dashS.textContent = visited.length;
+  if (dashSBar) dashSBar.style.width = Math.min((visited.length / total) * 100, 100) + '%';
+  if (dashD) dashD.textContent = done.length;
+  if (dashDBar) dashDBar.style.width = Math.min((done.length / total) * 100, 100) + '%';
+  if (dashBm) dashBm.textContent = bm.length;
+}
+
+// Track visited sections via scroll spy
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY + 100;
+  let current = '';
+  document.querySelectorAll('section[id]').forEach(sec => {
+    if (sec.offsetTop <= scrollY) current = sec.id;
+  });
+  if (current) {
+    const visited = getVisitedSections();
+    if (!visited.includes(current)) {
+      visited.push(current);
+      localStorage.setItem('deutschar-visited', JSON.stringify(visited));
+      updateDashboard();
+    }
+  }
+}, { passive: true });
+
+updateDashboard();
+
+// ═══════════════════════════════════════
+// SECTION DONE / PROGRESS TRACKER
+// ═══════════════════════════════════════
+function injectProgressChecks() {
+  document.querySelectorAll('section.card[id]').forEach(section => {
+    const body = section.querySelector('.card-body');
+    if (!body || body.querySelector('.progress-tracker-wrap')) return;
+    const done = getDoneSections();
+    const isDone = done.includes(section.id);
+    const wrap = document.createElement('div');
+    wrap.className = 'progress-tracker-wrap';
+    wrap.innerHTML = `
+      <button class="progress-check ${isDone ? 'done' : ''}" data-section-id="${section.id}" title="Mark as done">✓</button>
+      <div class="section-progress-bar"><div class="section-progress-fill" style="width:${isDone ? '100' : '0'}%"></div></div>
+      <span class="progress-label">${isDone ? 'Done ✓' : 'Mark done'}</span>
+    `;
+    wrap.querySelector('.progress-check').addEventListener('click', function() {
+      let done = getDoneSections();
+      const id = this.dataset.sectionId;
+      const fill = wrap.querySelector('.section-progress-fill');
+      const label = wrap.querySelector('.progress-label');
+      if (done.includes(id)) {
+        done = done.filter(d => d !== id);
+        this.classList.remove('done');
+        if (fill) fill.style.width = '0%';
+        if (label) label.textContent = 'Mark done';
+      } else {
+        done.push(id);
+        this.classList.add('done');
+        if (fill) fill.style.width = '100%';
+        if (label) label.textContent = 'Done ✓';
+      }
+      localStorage.setItem('deutschar-done', JSON.stringify(done));
+      updateDashboard();
+    });
+    body.appendChild(wrap);
+  });
+}
+injectProgressChecks();
+
+// ═══════════════════════════════════════
+// FLASHCARDS TOOL
+// ═══════════════════════════════════════
+let fcDeck = [], fcIndex = 0, fcFlipped = false;
+
+function buildFCDeck(filter) {
+  if (filter === 'nouns') {
+    fcDeck = wordBank.nouns.map(n => ({
+      front: `${n.article} ${n.german}`,
+      back: n.english,
+      article: n.article,
+      extra: `Plural: ${n.plural}`
+    }));
+  } else if (filter === 'verbs') {
+    fcDeck = wordBank.verbs.map(v => ({
+      front: v.infinitive,
+      back: v.english,
+      article: '',
+      extra: `ich: ${v.conjugations['ich']}`
+    }));
+  } else {
+    fcDeck = wordBank.adjectives.map(a => ({
+      front: a.german,
+      back: a.english,
+      article: '',
+      extra: `comp: ${a.comparative}`
+    }));
+  }
+  // Shuffle
+  for (let i = fcDeck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [fcDeck[i], fcDeck[j]] = [fcDeck[j], fcDeck[i]];
+  }
+  fcIndex = 0;
+  fcFlipped = false;
+  renderFC();
+}
+
+function renderFC() {
+  const card = document.getElementById('flashcard');
+  const wordEl = document.getElementById('fcWord');
+  const articleEl = document.getElementById('fcArticle');
+  const translEl = document.getElementById('fcTranslation');
+  const extraEl = document.getElementById('fcExtra');
+  const counter = document.getElementById('fcCounter');
+  if (!card || !fcDeck.length) return;
+  const item = fcDeck[fcIndex];
+  card.classList.remove('flipped');
+  fcFlipped = false;
+  if (wordEl) wordEl.textContent = item.front;
+  if (articleEl) { articleEl.textContent = item.article; articleEl.className = `flashcard-article ${item.article ? item.article + '-text' : ''}`; }
+  if (translEl) translEl.textContent = item.back;
+  if (extraEl) extraEl.textContent = item.extra || '';
+  if (counter) counter.textContent = `${fcIndex + 1} / ${fcDeck.length}`;
+}
+
+document.querySelectorAll('[data-fc-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-fc-filter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    buildFCDeck(btn.dataset.fcFilter);
+  });
+});
+
+document.getElementById('flashcard')?.addEventListener('click', () => {
+  const card = document.getElementById('flashcard');
+  if (!card) return;
+  fcFlipped = !fcFlipped;
+  card.classList.toggle('flipped', fcFlipped);
+});
+
+document.getElementById('fcNext')?.addEventListener('click', () => {
+  if (!fcDeck.length) return;
+  fcIndex = (fcIndex + 1) % fcDeck.length;
+  renderFC();
+});
+document.getElementById('fcPrev')?.addEventListener('click', () => {
+  if (!fcDeck.length) return;
+  fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length;
+  renderFC();
+});
+
+// ── Swipe to flip / navigate flashcard ──
+(function() {
+  const fc = document.getElementById('flashcard');
+  if (!fc) return;
+  let touchStartX = 0, touchStartY = 0;
+  fc.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  fc.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const absDx = Math.abs(dx), absDy = Math.abs(dy);
+    // Swipe left → next card
+    if (absDx > 40 && absDx > absDy) {
+      if (dx < 0) { fcIndex = (fcIndex + 1) % fcDeck.length; renderFC(); }
+      else         { fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length; renderFC(); }
+    }
+    // Swipe up or down (or tap — small movement) → flip
+    else if (absDy < 20 && absDx < 20) {
+      // tap — let click handler manage it
+    } else if (absDy > 30 && absDy > absDx) {
+      fcFlipped = !fcFlipped;
+      fc.classList.toggle('flipped', fcFlipped);
+    }
+  }, { passive: true });
+})();
+
+buildFCDeck('nouns');
+
+// ═══════════════════════════════════════
+// FILL IN THE BLANK TOOL
+// ═══════════════════════════════════════
+const fitbExercises = [
+  { sentence: 'Ich ___ aus Deutschland.', answer: 'komme', hint: 'kommen (ich form)' },
+  { sentence: '___ heißt Maria.', answer: 'Sie', hint: 'feminine pronoun' },
+  { sentence: 'Das Buch ___ sehr interessant.', answer: 'ist', hint: 'sein (es form)' },
+  { sentence: 'Wir ___ heute ins Kino.', answer: 'gehen', hint: 'to go (wir form)' },
+  { sentence: 'Er ___ einen Kaffee.', answer: 'trinkt', hint: 'trinken (er form)' },
+  { sentence: 'Ich ___ Deutsch seit zwei Jahren.', answer: 'lerne', hint: 'lernen (ich form)' },
+  { sentence: 'Das Auto ___ rot.', answer: 'ist', hint: 'sein (es form)' },
+  { sentence: 'Sie ___ viel Deutsch.', answer: 'spricht', hint: 'sprechen (sie form) — irregular!' },
+  { sentence: '___ Hund heißt Bello.', answer: 'Der', hint: 'Hund is masculine' },
+  { sentence: 'Ich ___ gerne Musik.', answer: 'höre', hint: 'hören (ich form)' },
+  { sentence: 'Wann ___ du auf?', answer: 'stehst', hint: 'aufstehen — separable verb' },
+  { sentence: 'Er hat das Buch ___.', answer: 'gelesen', hint: 'lesen — Partizip II' },
+  { sentence: '___ Wetter ist heute schön.', answer: 'Das', hint: 'Wetter is neuter' },
+  { sentence: 'Kannst du mir ___?', answer: 'helfen', hint: 'infinitive of helfen' },
+  { sentence: 'Wir ___ morgen nach Berlin.', answer: 'fahren', hint: 'fahren (wir form)' },
+  { sentence: 'Ich ___ einen Bruder und eine Schwester.', answer: 'habe', hint: 'haben (ich form)' },
+  { sentence: 'Die Kinder ___ im Garten.', answer: 'spielen', hint: 'spielen (sie/plural form)' },
+  { sentence: 'Das Essen ___ sehr lecker!', answer: 'schmeckt', hint: 'schmecken (es form)' },
+  { sentence: 'Er ___ gestern in Berlin gewesen.', answer: 'ist', hint: 'sein — helper for Perfekt' },
+  { sentence: 'Ich ___ das nicht tun.', answer: 'kann', hint: 'können (ich form) — modal verb' },
+];
+
+let fitbIndex = 0, fitbScore = 0, fitbAttempts = 0;
+
+function loadFitb() {
+  const ex = fitbExercises[fitbIndex % fitbExercises.length];
+  const container = document.getElementById('fitbSentence');
+  if (!container) return;
+  container.innerHTML = ex.sentence.replace('___', `
+    <span class="fitb-blank" id="fitbBlankWrap">
+      <input type="text" id="fitbInput" autocomplete="off" spellcheck="false" placeholder="???">
+    </span>
+  `);
+  const input = document.getElementById('fitbInput');
+  if (input) {
+    input.focus();
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') checkFitb(); });
+  }
+}
+
+function checkFitb() {
+  const input = document.getElementById('fitbInput');
+  const blank = document.getElementById('fitbBlankWrap');
+  if (!input || !blank) return;
+  // Guard: already checked (input disabled)
+  if (input.disabled) return;
+  const ex = fitbExercises[fitbIndex % fitbExercises.length];
+  const val = input.value.trim();
+  if (!val) return;
+  fitbAttempts++;
+  const correct = val.toLowerCase() === ex.answer.toLowerCase();
+  if (correct) {
+    fitbScore++;
+    blank.classList.add('correct');
+  } else {
+    blank.classList.add('wrong');
+    input.value = ex.answer;
+  }
+  input.disabled = true;
+  document.getElementById('fitbScore').textContent = fitbScore;
+  document.getElementById('fitbTotal').textContent = fitbAttempts;
+}
+
+function nextFitb() {
+  fitbIndex = (fitbIndex + 1) % fitbExercises.length;
+  loadFitb();
+}
+
+document.getElementById('fitbCheckBtn')?.addEventListener('click', checkFitb);
+document.getElementById('fitbNextBtn')?.addEventListener('click', nextFitb);
+document.getElementById('fitbHintBtn')?.addEventListener('click', () => {
+  const ex = fitbExercises[fitbIndex % fitbExercises.length];
+  const streak = document.getElementById('fitbStreak');
+  if (streak) streak.textContent = '💡 Hint: ' + ex.hint;
+});
+
+loadFitb();
+
+// ═══════════════════════════════════════
+// MATCHING GAME TOOL
+// ═══════════════════════════════════════
+let matchPairs = [], matchSelected = null, matchMatched = 0;
+
+function buildMatchRound() {
+  const pool = [...wordBank.nouns].sort(() => Math.random() - 0.5).slice(0, 6);
+  matchPairs = pool.map(n => ({ de: `${n.article} ${n.german}`, en: n.english }));
+  matchMatched = 0;
+  matchSelected = null;
+  document.getElementById('matchScore').textContent = 0;
+  document.getElementById('matchTotal').textContent = matchPairs.length;
+  document.getElementById('matchSuccess').textContent = '';
+
+  const deCol = document.getElementById('matchColDE');
+  const enCol = document.getElementById('matchColEN');
+  if (!deCol || !enCol) return;
+
+  const deItems = [...matchPairs].sort(() => Math.random() - 0.5);
+  const enItems = [...matchPairs].sort(() => Math.random() - 0.5);
+
+  deCol.innerHTML = deItems.map(p => `<div class="match-card" data-match-de="${p.de}" data-match-key="${p.en}">${p.de}</div>`).join('');
+  enCol.innerHTML = enItems.map(p => `<div class="match-card" data-match-en="${p.en}" data-match-key="${p.en}">${p.en}</div>`).join('');
+
+  document.querySelectorAll('.match-card').forEach(card => {
+    card.addEventListener('click', handleMatchClick);
+  });
+}
+
+function handleMatchClick(e) {
+  const card = e.currentTarget;
+  if (card.classList.contains('matched') || card.classList.contains('selected')) return;
+
+  if (!matchSelected) {
+    card.classList.add('selected');
+    matchSelected = card;
+    return;
+  }
+
+  // Check if they match
+  const keyA = matchSelected.dataset.matchKey;
+  const keyB = card.dataset.matchKey;
+
+  if (keyA === keyB && matchSelected !== card) {
+    // Correct
+    matchSelected.classList.remove('selected');
+    matchSelected.classList.add('matched');
+    card.classList.add('matched');
+    matchMatched++;
+    document.getElementById('matchScore').textContent = matchMatched;
+    matchSelected = null;
+    if (matchMatched === matchPairs.length) {
+      const success = document.getElementById('matchSuccess');
+      if (success) success.innerHTML = '<div class="match-success">🎉 Ausgezeichnet! All matched!</div>';
+    }
+  } else {
+    // Wrong
+    card.classList.add('wrong');
+    matchSelected.classList.add('wrong');
+    const prevSelected = matchSelected;
+    matchSelected = null;
+    setTimeout(() => {
+      card.classList.remove('wrong', 'selected');
+      prevSelected.classList.remove('wrong', 'selected');
+    }, 600);
+  }
+}
+
+document.getElementById('matchNewBtn')?.addEventListener('click', buildMatchRound);
+buildMatchRound();
+
+// ═══════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  // Skip if user is typing in an input/textarea
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+  // Flashcard navigation: ← → to navigate, Space/Enter to flip
+  const fcSection = document.getElementById('flashcard-section');
+  if (fcSection) {
+    const rect = fcSection.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); document.getElementById('fcNext')?.click(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); document.getElementById('fcPrev')?.click(); }
+      if (e.key === ' ' || e.key === 'Enter') {
+        if (document.activeElement?.closest('#flashcard-section')) {
+          e.preventDefault(); document.getElementById('flashcard')?.click();
+        }
+      }
+    }
+  }
+});
+
+// ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
 console.log('%cDeutschAR.EDU v1.0 — Made by Abdelrahman Mohamed', 'color:#F0C233;font-weight:bold;font-size:14px;');
+
