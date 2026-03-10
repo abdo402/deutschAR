@@ -1529,7 +1529,7 @@ const fitbExercises = [
 
 let fitbIndex = 0, fitbScore = 0, fitbAttempts = 0;
 
-function loadFitb() {
+function loadFitb(autoFocus = false) {
   const ex = fitbExercises[fitbIndex % fitbExercises.length];
   const container = document.getElementById('fitbSentence');
   if (!container) return;
@@ -1540,7 +1540,7 @@ function loadFitb() {
   `);
   const input = document.getElementById('fitbInput');
   if (input) {
-    input.focus();
+    if (autoFocus) input.focus();
     input.addEventListener('keydown', e => { if (e.key === 'Enter') checkFitb(); });
   }
 }
@@ -1570,7 +1570,7 @@ function checkFitb() {
 
 function nextFitb() {
   fitbIndex = (fitbIndex + 1) % fitbExercises.length;
-  loadFitb();
+  loadFitb(true);
 }
 
 document.getElementById('fitbCheckBtn')?.addEventListener('click', checkFitb);
