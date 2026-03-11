@@ -4,6 +4,86 @@
 ============================================================ */
 
 // ═══════════════════════════════════════
+// CONTENT PROTECTION
+// © 2026 Abdelrahman Mohamed. All rights reserved.
+// Unauthorized copying, redistribution or modification
+// of this code or its content is strictly prohibited.
+// ═══════════════════════════════════════
+(function () {
+
+  // ── Console watermark ──
+  console.clear();
+  console.log(
+    '%c DeutschAR.EDU ',
+    'background:#0D1B2A;color:#F0C233;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:6px;'
+  );
+  console.log(
+    '%c © 2026 Abdelrahman Mohamed. All rights reserved.\n%c Unauthorized use or redistribution of this code is prohibited.',
+    'color:#94A8BE;font-size:13px;',
+    'color:#cc2936;font-size:12px;font-weight:bold;'
+  );
+  console.log(
+    '%c If you\'re a developer exploring this for learning purposes, please respect the author\'s work.',
+    'color:#607a90;font-size:11px;font-style:italic;'
+  );
+
+  // ── Disable right-click context menu ──
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    return false;
+  });
+
+  // ── Disable text selection on non-input elements ──
+  document.addEventListener('selectstart', function (e) {
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return true;
+    e.preventDefault();
+    return false;
+  });
+
+  // ── Block DevTools shortcuts & source-view hotkeys ──
+  document.addEventListener('keydown', function (e) {
+    const ctrl  = e.ctrlKey || e.metaKey;
+    const shift = e.shiftKey;
+    const key   = e.key;
+
+    // F12 — DevTools
+    if (key === 'F12') { e.preventDefault(); return false; }
+    // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C — DevTools panels
+    if (ctrl && shift && (key === 'I' || key === 'i' || key === 'J' || key === 'j' || key === 'C' || key === 'c')) {
+      e.preventDefault(); return false;
+    }
+    // Ctrl+U — View source
+    if (ctrl && (key === 'U' || key === 'u')) { e.preventDefault(); return false; }
+    // Ctrl+S — Save page
+    if (ctrl && (key === 'S' || key === 's')) { e.preventDefault(); return false; }
+    // Ctrl+A — Select all (allow inside inputs/textareas)
+    if (ctrl && (key === 'A' || key === 'a')) {
+      const tag = document.activeElement?.tagName;
+      if (tag !== 'INPUT' && tag !== 'TEXTAREA') { e.preventDefault(); return false; }
+    }
+  }, true); // capture phase so it fires before other handlers
+
+  // ── DevTools size detection ──
+  // When DevTools is open the window inner dimensions shrink noticeably
+  const _threshold = 160;
+  let _devWarn = false;
+  setInterval(function () {
+    const widthDiff  = window.outerWidth  - window.innerWidth;
+    const heightDiff = window.outerHeight - window.innerHeight;
+    if ((widthDiff > _threshold || heightDiff > _threshold) && !_devWarn) {
+      _devWarn = true;
+      console.clear();
+      console.log('%c🚫 DevTools detected', 'color:#cc2936;font-size:16px;font-weight:bold;');
+      console.log('%cThis tool is protected. Please respect the author\'s work.', 'color:#607a90;');
+    } else if (widthDiff <= _threshold && heightDiff <= _threshold) {
+      _devWarn = false;
+    }
+  }, 1000);
+
+})();
+
+// ═══════════════════════════════════════
 // WORD BANK DATA
 // ═══════════════════════════════════════
 
@@ -1235,6 +1315,7 @@ const sectionIndex = [
   { id: 'flashcard-section',        title: 'Flashcards',                      type: 'Tool' },
   { id: 'fitb-section',             title: 'Fill in the Blank',               type: 'Tool' },
   { id: 'matching-section',         title: 'Matching Game',                   type: 'Tool' },
+  { id: 'schreibprufer-section',    title: 'Schreibprüfer · AI Writing Checker', type: 'Tool' },
 ];
 
 function openSearchOverlay() {
@@ -1704,22 +1785,33 @@ console.log('%cDeutschAR.EDU v3.0 — Made by Abdelrahman Mohamed', 'color:#F0C2
 
 function speakDE(text) {
   if (!window.speechSynthesis) return;
-  // Clean text — strip article prefixes like "der/die/das " for cleaner speech
   const cleaned = text.trim();
+  if (!cleaned) return;
+
+  // Cancel any ongoing speech
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(cleaned);
-  utt.lang = 'de-DE';
-  utt.rate = 0.88;
-  utt.pitch = 1;
 
-  // Animate the button that triggered playback
-  const activeBtn = document.querySelector('.speak-btn.speaking');
-  if (activeBtn) activeBtn.classList.remove('speaking');
+  // Chrome race condition fix: brief delay after cancel() before speak()
+  setTimeout(() => {
+    const utt = new SpeechSynthesisUtterance(cleaned);
+    utt.lang = 'de-DE';
+    utt.rate = 0.88;
+    utt.pitch = 1;
 
-  utt.onend = () => {
-    document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
-  };
-  window.speechSynthesis.speak(utt);
+    // Try to find a German voice; fall back to default
+    const voices = window.speechSynthesis.getVoices();
+    const deVoice = voices.find(v => v.lang.startsWith('de')) || null;
+    if (deVoice) utt.voice = deVoice;
+
+    utt.onend = () => {
+      document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+    };
+    utt.onerror = () => {
+      document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+    };
+
+    window.speechSynthesis.speak(utt);
+  }, 50);
 }
 
 function makeSpeakBtn(text) {
@@ -1795,4 +1887,416 @@ document.addEventListener('DOMContentLoaded', () => {
   const verbContainer = document.getElementById('verbsContainer');
   if (nounTbody) _speakObserver.observe(nounTbody, { childList: true, subtree: false });
   if (verbContainer) _speakObserver.observe(verbContainer, { childList: true, subtree: false });
+
+  // Pre-load voices (Chrome loads them asynchronously — must be triggered early)
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
 });
+
+
+// ═══════════════════════════════════════
+// SCHREIBPRÜFER — AI Writing Checker
+// ═══════════════════════════════════════
+
+(function () {
+  // ── Element refs (resolved after DOM is ready) ──
+  let _ta, _pFill, _minMarker, _wcCurrent, _wcRange, _statusMsg, _inputSec;
+
+  function _init() {
+    _ta        = document.getElementById('germanInput');
+    _pFill     = document.getElementById('progressFill');
+    _minMarker = document.getElementById('minMarker');
+    _wcCurrent = document.getElementById('wcCurrent');
+    _wcRange   = document.getElementById('wcRange');
+    _statusMsg = document.getElementById('limitStatusMsg');
+    _inputSec  = document.getElementById('inputSection');
+
+    if (!_ta) return; // section not present in this build — abort
+
+    _ta.addEventListener('input', updateLimitUI);
+    _ta.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') checkParagraph();
+    });
+    updateLimitUI();
+  }
+
+  // ── Helpers ──
+  function countWords(s) {
+    return s.trim() === '' ? 0 : s.trim().split(/\s+/).length;
+  }
+
+  function getLimits() {
+    return {
+      mn: Math.max(0, parseInt(document.getElementById('minWords').value) || 0),
+      mx: Math.max(0, parseInt(document.getElementById('maxWords').value) || 0)
+    };
+  }
+
+  // ── Word-limit UI ──
+  function updateLimitUI() {
+    const wc = countWords(_ta.value);
+    const { mn, mx } = getLimits();
+    const hasLimit = mn > 0 || mx > 0;
+
+    _wcCurrent.textContent = `${wc} word${wc !== 1 ? 's' : ''}`;
+
+    if (!hasLimit) {
+      _pFill.style.width      = '0%';
+      _pFill.style.background = 'var(--chk-muted)';
+      _wcRange.textContent    = 'No limit';
+      _statusMsg.textContent  = '';
+      _wcCurrent.className    = 'chk-wc-current';
+      _inputSec.className     = 'chk-input-section';
+      _minMarker.style.display = 'none';
+      return;
+    }
+
+    const ceil    = mx > 0 ? mx : (mn > 0 ? mn * 2.5 : 100);
+    const fillPct = Math.min((wc / ceil) * 100, 100);
+    _pFill.style.width = `${fillPct}%`;
+
+    if (mn > 0 && mx > 0) {
+      const markerPct = Math.min((mn / ceil) * 100, 98);
+      _minMarker.style.display = 'block';
+      _minMarker.style.left    = `${markerPct}%`;
+    } else {
+      _minMarker.style.display = 'none';
+    }
+
+    _wcRange.textContent = mn > 0 && mx > 0 ? `${mn}–${mx} words`
+      : mn > 0 ? `min ${mn} words`
+      : `max ${mx} words`;
+
+    const overMax  = mx > 0 && wc > mx;
+    const underMin = mn > 0 && wc < mn;
+
+    if (overMax) {
+      _pFill.style.background = 'var(--chk-red)';
+      _wcCurrent.className    = 'chk-wc-current chk-wc-over';
+      _inputSec.className     = 'chk-input-section chk-over-limit';
+      const over = wc - mx;
+      _statusMsg.style.color  = 'var(--chk-red)';
+      _statusMsg.textContent  = `⚠ ${over} word${over !== 1 ? 's' : ''} over the limit — trim your paragraph`;
+    } else if (underMin) {
+      _pFill.style.background = wc > 0 ? 'var(--chk-orange)' : 'var(--chk-muted)';
+      _wcCurrent.className    = 'chk-wc-current chk-wc-under';
+      _inputSec.className     = 'chk-input-section chk-under-limit';
+      const need = mn - wc;
+      _statusMsg.style.color  = 'var(--chk-orange)';
+      _statusMsg.textContent  = `✎ ${need} more word${need !== 1 ? 's' : ''} to reach the minimum`;
+    } else {
+      _pFill.style.background = 'var(--chk-green)';
+      _wcCurrent.className    = 'chk-wc-current chk-wc-ok';
+      _inputSec.className     = 'chk-input-section chk-in-limit';
+      _statusMsg.style.color  = 'var(--chk-green)';
+      if (mx > 0) {
+        const rem = mx - wc;
+        _statusMsg.textContent = `✓ Within limit · ${rem} word${rem !== 1 ? 's' : ''} remaining`;
+      } else {
+        _statusMsg.textContent = '✓ Minimum word count reached';
+      }
+    }
+  }
+
+  // ── Global helpers called from onclick attributes ──
+  window.setPreset = function (min, max, btn) {
+    document.getElementById('minWords').value = min;
+    document.getElementById('maxWords').value = max;
+    clearPresets();
+    if (btn) btn.classList.add('active');
+    updateLimitUI();
+  };
+
+  window.clearPresets = function () {
+    document.querySelectorAll('.chk-preset').forEach(b => b.classList.remove('active'));
+  };
+
+  window.updateLimitUI = updateLimitUI;
+
+  window.switchView = function (mode) {
+    const sv = document.getElementById('chkSingleView');
+    const dv = document.getElementById('chkDiffView');
+    if (!sv || !dv) return;
+    sv.classList.toggle('hidden', mode !== 'single');
+    dv.classList.toggle('show',   mode === 'diff');
+    document.getElementById('chkTabSingle').classList.toggle('active', mode === 'single');
+    document.getElementById('chkTabDiff').classList.toggle('active',   mode === 'diff');
+  };
+
+  window.copyCorrection = function () {
+    const el = document.getElementById('chkCorrectedText');
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent).then(() => {
+      const btn = document.getElementById('chkCopyBtn');
+      if (!btn) return;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  };
+
+  window.resetForm = function () {
+    const rs = document.getElementById('resultsSection');
+    if (rs) { rs.classList.remove('active'); rs.innerHTML = ''; }
+    if (_ta) _ta.focus();
+    updateLimitUI();
+  };
+
+  // ── Score helper ──
+  function scoreClass(s) {
+    if (s >= 85) return 'excellent';
+    if (s >= 70) return 'good';
+    if (s >= 50) return 'fair';
+    return 'poor';
+  }
+
+  // ── HTML escaper ──
+  function esc(s) {
+    if (s == null) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Error display ──
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    const ls  = document.getElementById('loadingState');
+    const btn = document.getElementById('checkBtn');
+    if (box) { box.textContent = msg; box.classList.add('active'); }
+    if (ls)  ls.classList.remove('active');
+    if (btn) btn.disabled = false;
+  }
+
+  // ── Render results ──
+  function renderResults(r, original) {
+    const section = document.getElementById('resultsSection');
+    if (!section) return;
+    const sc = scoreClass(r.score);
+
+    const icons = { grammar: 'G', spelling: 'S', style: '✦', praise: '✓' };
+
+    const fbHTML = (r.feedback || []).map(fb => `
+      <div class="chk-feedback-item ${esc(fb.type)}">
+        <div class="chk-feedback-icon chk-icon-${esc(fb.type)}">${icons[fb.type] || '?'}</div>
+        <div>
+          <div class="chk-error-type chk-type-${esc(fb.type)}">${esc(fb.type).toUpperCase()}</div>
+          <div class="chk-fb-original">
+            ${fb.correction
+              ? `<del>${esc(fb.original)}</del> → <ins>${esc(fb.correction)}</ins>`
+              : `<span style="color:var(--chk-green)">${esc(fb.original)}</span>`}
+          </div>
+          <div class="chk-fb-explanation">${esc(fb.explanation)}</div>
+        </div>
+      </div>`).join('');
+
+    const gc  = (r.feedback || []).filter(f => f.type === 'grammar').length;
+    const sc2 = (r.feedback || []).filter(f => f.type === 'spelling').length;
+    const stc = (r.feedback || []).filter(f => f.type === 'style').length;
+    const pc  = (r.feedback || []).filter(f => f.type === 'praise').length;
+    const corrected = r.corrected_paragraph || original;
+
+    section.innerHTML = `
+      <div class="chk-score-header">
+        <div class="chk-score-ring ${sc}">${r.score != null ? r.score : '?'}</div>
+        <div class="chk-score-info">
+          <h2>${esc(r.level)} · ${esc(r.grade)}</h2>
+          <p>${esc(r.summary)}</p>
+          <div class="chk-score-pills">
+            ${gc  ? `<span class="chk-score-pill pill-red">${gc} grammar</span>` : ''}
+            ${sc2 ? `<span class="chk-score-pill pill-orange">${sc2} spelling</span>` : ''}
+            ${stc ? `<span class="chk-score-pill pill-blue">${stc} style</span>` : ''}
+            ${pc  ? `<span class="chk-score-pill pill-green">${pc} ✓ correct</span>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div class="chk-corrected-section">
+        <div class="chk-corrected-header">
+          <div class="chk-corrected-header-left">✓ Corrected Version</div>
+          <button class="chk-copy-btn" id="chkCopyBtn" onclick="copyCorrection()">⎘ Copy</button>
+        </div>
+        <div class="chk-corrected-body">
+          <div class="chk-diff-toggle">
+            <button class="chk-diff-tab active" id="chkTabSingle" onclick="switchView('single')">Corrected</button>
+            <button class="chk-diff-tab" id="chkTabDiff" onclick="switchView('diff')">Side by Side</button>
+          </div>
+          <div id="chkSingleView" class="chk-single-view">
+            <div class="chk-corrected-text" id="chkCorrectedText">${esc(corrected)}</div>
+          </div>
+          <div id="chkDiffView" class="chk-diff-view">
+            <div class="chk-diff-grid">
+              <div>
+                <div class="chk-diff-col-label chk-label-original">✗ Your original</div>
+                <div class="chk-diff-col-text">${esc(original)}</div>
+              </div>
+              <div>
+                <div class="chk-diff-col-label chk-label-corrected">✓ Corrected</div>
+                <div class="chk-diff-col-text">${esc(corrected)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      ${(r.feedback || []).length > 0 ? `
+      <div class="chk-annotated-section">
+        <div class="chk-section-title">📝 Detailed Feedback</div>
+        <div class="chk-feedback-list">${fbHTML}</div>
+        <div class="chk-legend">
+          <span>Legend:</span>
+          <span class="chk-legend-item"><span class="chk-legend-line" style="background:var(--chk-red)"></span>Grammar</span>
+          <span class="chk-legend-item"><span class="chk-legend-line" style="background:var(--chk-orange)"></span>Spelling</span>
+          <span class="chk-legend-item"><span class="chk-legend-line" style="background:var(--chk-blue)"></span>Style</span>
+          <span class="chk-legend-item"><span class="chk-legend-line" style="background:var(--chk-green)"></span>Correct ✓</span>
+        </div>
+      </div>` : `
+      <div class="chk-success-box">
+        <h3>🎉 Ausgezeichnet! No errors found</h3>
+        <p>Your German paragraph had no detectable errors. Excellent work — keep this up for your exams!</p>
+      </div>`}
+
+      <div class="chk-tip-box">
+        <h3>💡 Lerntipp · Study Tip</h3>
+        <p>${esc(r.tip || '')}</p>
+      </div>
+
+      <div class="chk-annotated-section">
+        <div class="chk-section-title">📊 Overall Assessment</div>
+        <div style="padding:1.2rem 1.5rem;font-size:0.95rem;color:var(--chk-text2);line-height:1.7;">${esc(r.overall_comment || '')}</div>
+      </div>
+
+      <button class="chk-try-again-btn" onclick="resetForm()">↩ Try another paragraph</button>
+    `;
+
+    section.classList.add('active');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── Main check function ──
+  window.checkParagraph = async function () {
+    if (!_ta) return;
+    const text = _ta.value.trim();
+    if (!text || text.length < 8) {
+      showError('Please write at least a sentence in German before checking.');
+      return;
+    }
+
+    const { mn, mx } = getLimits();
+    const wc = countWords(text);
+
+    if (mx > 0 && wc > mx) {
+      showError(`Your paragraph is ${wc - mx} word${wc - mx !== 1 ? 's' : ''} over the limit (max ${mx}). Please shorten it before checking.`);
+      return;
+    }
+    if (mn > 0 && wc < mn) {
+      showError(`Your paragraph needs ${mn - wc} more word${mn - wc !== 1 ? 's' : ''} to meet the minimum (min ${mn}). Keep writing!`);
+      return;
+    }
+
+    const topic   = document.getElementById('topicSelect').value;
+    const btn     = document.getElementById('checkBtn');
+    const loading = document.getElementById('loadingState');
+    const results = document.getElementById('resultsSection');
+    const errBox  = document.getElementById('errorBox');
+
+    btn.disabled = true;
+    loading.classList.add('active');
+    results.classList.remove('active');
+    results.innerHTML = '';
+    errBox.classList.remove('active');
+
+    const sysPrompt = `You are an expert German language teacher analyzing a student's German writing for exam preparation. Return ONLY a valid JSON object — no markdown fences, no extra text.
+
+JSON structure:
+{
+  "score": 0-100,
+  "grade": "A"/"B"/"C"/"D",
+  "level": "Excellent"/"Good"/"Fair"/"Needs Work",
+  "summary": "One encouraging sentence summarizing overall performance",
+  "corrected_paragraph": "The FULL paragraph rewritten with every error fixed. Preserve the student's original meaning and sentence structure. Only change incorrect elements.",
+  "feedback": [
+    {
+      "type": "grammar"/"spelling"/"style"/"praise",
+      "original": "exact word or phrase from the student's text",
+      "correction": "corrected version, or null if type is praise",
+      "explanation": "Brief, clear English explanation of the rule or why it is good"
+    }
+  ],
+  "tip": "One specific German grammar or vocabulary study tip relevant to this student's mistakes",
+  "overall_comment": "2-3 sentences: what they did well, what to focus on next"
+}
+
+Rules:
+- Topic context: ${topic}
+- corrected_paragraph: rewrite the ENTIRE original text with all fixes applied, in the same order. Do not add new content.
+- Grammar: cases (Nominativ/Akkusativ/Dativ), verb conjugation, V2 word order, adjective endings, correct article (der/die/das)
+- Spelling: Umlaut (ä/ö/ü/Ä/Ö/Ü), ß vs ss, ALL German nouns must be capitalized
+- Style: vocabulary choice, sentence variety, register, connectors
+- Praise: highlight at least 2 genuinely correct things if any exist — be specific
+- Be thorough yet encouraging — this is for exam prep`;
+
+    try {
+      // Retrieve API key stored by user — never hardcoded in source
+      const apiKey = localStorage.getItem('deutschar-api-key') || '';
+      if (!apiKey) {
+        const entered = window.prompt(
+          'DeutschAR.EDU — Schreibprüfer\n\nEnter your Anthropic API key to use the AI checker.\nIt will be saved locally in your browser only.'
+        );
+        if (!entered || !entered.trim()) {
+          showError('API key required to run the checker. Please reload and enter your key.');
+          return;
+        }
+        localStorage.setItem('deutschar-api-key', entered.trim());
+      }
+      const activeKey = localStorage.getItem('deutschar-api-key');
+
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': activeKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1500,
+          system: sysPrompt,
+          messages: [{ role: 'user', content: `Analyze this German text:\n\n"${text}"` }]
+        })
+      });
+
+      if (!resp.ok) {
+        if (resp.status === 401 || resp.status === 403) {
+          localStorage.removeItem('deutschar-api-key');
+          throw new Error('Invalid API key. Please reload the page to enter a valid key.');
+        }
+        throw new Error(`API error ${resp.status}`);
+      }
+
+      const data  = await resp.json();
+      const raw   = (data.content || []).map(b => b.text || '').join('');
+      const clean = raw.replace(/```json|```/g, '').trim();
+      const result = JSON.parse(clean);
+      renderResults(result, text);
+    } catch (err) {
+      console.error('[Schreibprüfer]', err);
+      showError(err.message || 'Something went wrong during analysis. Please try again.');
+    } finally {
+      btn.disabled = false;
+      loading.classList.remove('active');
+    }
+  };
+
+  // ── Bootstrap on DOMContentLoaded ──
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _init);
+  } else {
+    _init(); // Script loaded after DOM — init immediately
+  }
+})();
