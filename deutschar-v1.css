@@ -1,11 +1,10 @@
 /* ============================================================
-   DeutschAR.EDU v2.0 — Stylesheet
+   DeutschAR.EDU v3.0 — Stylesheet
    Design: Editorial Elegance · Light/Dark Toggle
    Author: AR
 ============================================================ */
 
-/* ── FONTS ── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* ── FONTS loaded via <link> in HTML (with preconnects) ── */
 
 /* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,6 +28,24 @@ body { font-family: 'Nunito', sans-serif; transition: background 0.3s, color 0.3
 
   /* Transitions */
   --t: 0.2s ease;
+}
+
+/* ── SMOOTH THEME TRANSITION ──
+   CSS variables don't animate themselves — this class forces a universal
+   transition on every element for the duration of the theme switch,
+   then JS removes it so it never interferes with other animations.      */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 0.4s ease,
+    background     0.4s ease,
+    color          0.4s ease,
+    border-color   0.4s ease,
+    box-shadow     0.4s ease,
+    fill           0.4s ease,
+    stroke         0.4s ease !important;
 }
 
 /* ── DARK THEME ── */
@@ -208,8 +225,8 @@ body {
 
 .chapter-title {
   flex: 1;
-  em { font-style: italic; color: var(--text-muted); font-size: 0.85em; margin-left: 4px; }
 }
+.chapter-title em { font-style: italic; color: var(--text-muted); font-size: 0.85em; margin-left: 4px; }
 
 .chapter-arrow {
   font-size: 1rem;
@@ -222,7 +239,7 @@ body {
 .chapter-items {
   overflow: hidden;
   transition: max-height 0.3s ease;
-  max-height: 700px;
+  max-height: 1100px;
 }
 .chapter-items.closed { max-height: 0; }
 
@@ -713,8 +730,8 @@ body {
   font-weight: 700;
   color: var(--text);
   margin-bottom: 0.75rem;
-  em { font-style: italic; color: var(--accent); }
 }
+.sub-heading em { font-style: italic; color: var(--accent); }
 
 /* Two col */
 .two-col {
@@ -979,7 +996,8 @@ body {
   color: var(--accent);
 }
 .case-role { font-size: 0.82rem; font-weight: 600; color: var(--text); }
-.case-example { font-size: 0.78rem; color: var(--text-muted); font-style: italic; em { color: var(--accent); font-style: normal; font-weight: 700; } }
+.case-example { font-size: 0.78rem; color: var(--text-muted); font-style: italic; }
+.case-example em { color: var(--accent); font-style: normal; font-weight: 700; }
 
 /* ═══════════════════════════════════════
    CONJUGATION TABLES
@@ -1696,11 +1714,7 @@ body, .sidebar, .topbar, .content, .card, .card-header, .card-body,
 .theme-toggle, .search-trigger, .back-to-top,
 .flashcard-front, .flashcard-back,
 .match-card, .fitb-blank, .bookmarks-panel,
-.search-modal, .search-modal-item, .smi-type,
-.wotd-modal, .wotd-modal-header, .wotd-modal-body,
-.wotd-modal-row, .wotd-modal-close, .wotd-modal-tag,
-.wotd-modal-de, .wotd-modal-en, .wotd-modal-row-label,
-.wotd-modal-row-value {
+.search-modal, .search-modal-item, .smi-type {
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease,
@@ -2370,7 +2384,8 @@ body, .sidebar, .topbar, .content, .card, .card-header, .card-body,
 
 /* ── BOOKMARKS PANEL ── */
 .bookmarks-panel {
-  display: none;
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: var(--topbar-h);
   right: 0;
@@ -2379,11 +2394,19 @@ body, .sidebar, .topbar, .content, .card, .card-header, .card-body,
   background: var(--bg-sidebar);
   border-left: 1px solid var(--border);
   z-index: 150;
-  flex-direction: column;
   box-shadow: -4px 0 20px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
+  transform: translateX(100%);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
 }
-.bookmarks-panel.open { display: flex; }
+.bookmarks-panel.open {
+  transform: translateX(0);
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
 .bookmarks-panel-header {
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border);
@@ -2501,7 +2524,7 @@ section[id], div[id].chapter-divider {
 
 /* ── WOTD MODAL ── */
 .wotd-modal-overlay {
-  display: flex;
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
@@ -2511,18 +2534,8 @@ section[id], div[id].chapter-divider {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  /* Fade in/out instead of display snap */
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.25s ease, visibility 0.25s ease,
-              background-color 0.35s ease;
 }
-.wotd-modal-overlay.open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
-}
+.wotd-modal-overlay.open { display: flex; }
 
 .wotd-modal {
   background: var(--bg-card);
@@ -2532,15 +2545,7 @@ section[id], div[id].chapter-divider {
   max-width: 480px;
   box-shadow: 0 24px 60px rgba(0,0,0,0.45);
   overflow: hidden;
-  /* Slide-up on open, respects theme transition */
-  transform: translateY(16px) scale(0.97);
-  transition: transform 0.25s ease,
-              background-color 0.35s ease,
-              border-color 0.35s ease,
-              box-shadow 0.35s ease;
-}
-.wotd-modal-overlay.open .wotd-modal {
-  transform: translateY(0) scale(1);
+  animation: searchDrop 0.2s ease;
 }
 
 .wotd-modal-header {
@@ -2673,4 +2678,62 @@ section[id], div[id].chapter-divider {
   .level-filter-btn { font-size: 0.7rem; padding: 0.25rem 0.65rem; }
   .wotd-modal { max-width: calc(100vw - 2rem); }
   .wotd-modal-de { font-size: 2.2rem; }
+}
+
+/* ═══════════════════════════════════════
+   SPEAK / PRONUNCIATION BUTTON
+═══════════════════════════════════════ */
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.1s;
+  line-height: 1;
+  position: relative;
+  top: -1px;
+}
+.speak-btn:hover {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.speak-btn:active { transform: scale(0.88); }
+.speak-btn.speaking {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: var(--accent);
+  animation: speak-pulse 0.7s ease-in-out infinite alternate;
+}
+@keyframes speak-pulse {
+  from { opacity: 0.7; transform: scale(0.95); }
+  to   { opacity: 1;   transform: scale(1.08); }
+}
+
+/* Inline variant inside bold text (nouns table, verb cards) */
+.speak-btn-inline {
+  width: 20px;
+  height: 20px;
+  top: -1px;
+}
+
+/* Don't let speak btn interfere with vocab-row layout */
+.vocab-row .de,
+.pg-item .de,
+.color-item .de,
+.phrase-de {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.1rem;
 }
