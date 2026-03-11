@@ -1,5 +1,5 @@
 /* ============================================================
-   DeutschAR.EDU v2.0 — JavaScript
+   DeutschAR.EDU v3.0 — JavaScript
    Author: AR
 ============================================================ */
 
@@ -432,8 +432,10 @@ const html = document.documentElement;
 const themeToggle = document.getElementById('themeToggle');
 
 function setTheme(t) {
+  html.classList.add('theme-transitioning');
   html.setAttribute('data-theme', t);
   localStorage.setItem('deutschar-theme', t);
+  setTimeout(() => html.classList.remove('theme-transitioning'), 450);
 }
 
 themeToggle.addEventListener('click', () => {
@@ -553,7 +555,10 @@ function renderNouns(filter = '') {
   tbody.innerHTML = filtered.map(n => `
     <tr>
       <td><span class="gender-badge ${n.article}">${n.article}</span></td>
-      <td class="${n.article}-text" style="font-weight:700">${n.german}</td>
+      <td class="${n.article}-text" style="font-weight:700">
+        ${n.article} ${n.german}
+        <button class="speak-btn speak-btn-inline" aria-label="Pronounce ${n.article} ${n.german}" data-speak="${n.article} ${n.german}" onclick="event.stopPropagation();document.querySelectorAll('.speak-btn.speaking').forEach(b=>b.classList.remove('speaking'));this.classList.add('speaking');speakDE(this.dataset.speak)"><svg viewBox='0 0 20 20' fill='currentColor' width='12' height='12'><path d='M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z'/></svg></button>
+      </td>
       <td style="color:var(--text-muted);font-size:0.82rem">${n.plural}</td>
       <td style="color:var(--text-2)">${n.english}</td>
       <td style="color:var(--text-muted);font-size:0.8rem">${n.opposite ? `<span class="opposite-badge">↔ ${n.opposite}</span>` : '—'}</td>
@@ -595,7 +600,7 @@ function renderVerbs(filter = '') {
     <div class="verb-card">
       <div class="verb-card-header">
         <div>
-          <div class="verb-infinitive">${v.infinitive}</div>
+          <div class="verb-infinitive">${v.infinitive} <button class="speak-btn speak-btn-inline" aria-label="Pronounce ${v.infinitive}" data-speak="${v.infinitive}" onclick="event.stopPropagation();document.querySelectorAll('.speak-btn.speaking').forEach(b=>b.classList.remove('speaking'));this.classList.add('speaking');speakDE(this.dataset.speak)"><svg viewBox='0 0 20 20' fill='currentColor' width='12' height='12'><path d='M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z'/></svg></button></div>
           <div class="verb-english">${v.english}</div>
         </div>
         <span class="verb-type ${v.type}">${v.type}</span>
@@ -1186,13 +1191,16 @@ const sectionIndex = [
   { id: 'days-section',             title: 'Days & Months',                   type: 'Basics' },
   { id: 'time-section',             title: 'Time Expressions — die Zeit',     type: 'Basics' },
   { id: 'articles-section',         title: 'Articles — der / die / das',      type: 'Grammar' },
+  { id: 'negation-section',         title: 'Negation — nicht & kein',          type: 'Grammar' },
   { id: 'cases-section',            title: 'Cases — Die Fälle',               type: 'Grammar' },
   { id: 'conjugation-section',      title: 'Verb Conjugation',                type: 'Grammar' },
   { id: 'praeteritum-section',      title: 'Simple Past — Präteritum',        type: 'Grammar' },
   { id: 'modal-section',            title: 'Modal Verbs',                     type: 'Grammar' },
+  { id: 'imperative-section',       title: 'Imperative — Der Imperativ',       type: 'Grammar' },
   { id: 'wordorder-section',        title: 'Word Order',                      type: 'Grammar' },
   { id: 'wfragen-section',          title: 'W-Questions — W-Fragen',          type: 'Grammar' },
   { id: 'separable-section',        title: 'Separable Verbs',                 type: 'Grammar' },
+  { id: 'reflexive-section',        title: 'Reflexive Verbs — Reflexive Verben', type: 'Grammar' },
   { id: 'prepositions-section',     title: 'Local Prepositions',              type: 'Grammar' },
   { id: 'adjectives-grammar-section', title: 'Adjective Endings',            type: 'Grammar' },
   { id: 'perfect-section',          title: 'Perfect Tense — Perfekt',         type: 'Grammar' },
@@ -1317,21 +1325,16 @@ function updateDashboard() {
   const total = sectionIndex.length;
   const bm = getBookmarks();
 
-  // Filter to only IDs that still exist in sectionIndex (prune stale localStorage)
-  const validIds = new Set(sectionIndex.map(s => s.id));
-  const validVisited = visited.filter(id => validIds.has(id));
-  const validDone    = done.filter(id => validIds.has(id));
-
   const dashS = document.getElementById('dashSections');
   const dashSBar = document.getElementById('dashSectionsBar');
   const dashD = document.getElementById('dashDone');
   const dashDBar = document.getElementById('dashDoneBar');
   const dashBm = document.getElementById('dashBookmarks');
 
-  if (dashS) dashS.textContent = validVisited.length;
-  if (dashSBar) dashSBar.style.width = Math.min((validVisited.length / total) * 100, 100) + '%';
-  if (dashD) dashD.textContent = validDone.length;
-  if (dashDBar) dashDBar.style.width = Math.min((validDone.length / total) * 100, 100) + '%';
+  if (dashS) dashS.textContent = visited.length;
+  if (dashSBar) dashSBar.style.width = Math.min((visited.length / total) * 100, 100) + '%';
+  if (dashD) dashD.textContent = done.length;
+  if (dashDBar) dashDBar.style.width = Math.min((done.length / total) * 100, 100) + '%';
   if (dashBm) dashBm.textContent = bm.length;
 }
 
@@ -1534,7 +1537,7 @@ const fitbExercises = [
 
 let fitbIndex = 0, fitbScore = 0, fitbAttempts = 0;
 
-function loadFitb(autoFocus = false) {
+function loadFitb() {
   const ex = fitbExercises[fitbIndex % fitbExercises.length];
   const container = document.getElementById('fitbSentence');
   if (!container) return;
@@ -1545,7 +1548,7 @@ function loadFitb(autoFocus = false) {
   `);
   const input = document.getElementById('fitbInput');
   if (input) {
-    if (autoFocus) input.focus();
+    input.focus();
     input.addEventListener('keydown', e => { if (e.key === 'Enter') checkFitb(); });
   }
 }
@@ -1575,7 +1578,7 @@ function checkFitb() {
 
 function nextFitb() {
   fitbIndex = (fitbIndex + 1) % fitbExercises.length;
-  loadFitb(true);
+  loadFitb();
 }
 
 document.getElementById('fitbCheckBtn')?.addEventListener('click', checkFitb);
@@ -1687,5 +1690,104 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
-console.log('%cDeutschAR.EDU v2.0 — Made by Abdelrahman Mohamed', 'color:#F0C233;font-weight:bold;font-size:14px;');
+console.log('%cDeutschAR.EDU v3.0 — Made by Abdelrahman Mohamed', 'color:#F0C233;font-weight:bold;font-size:14px;');
 
+
+// ═══════════════════════════════════════
+// AUDIO PRONUNCIATION (Web Speech API)
+// ═══════════════════════════════════════
+
+function speakDE(text) {
+  if (!window.speechSynthesis) return;
+  // Clean text — strip article prefixes like "der/die/das " for cleaner speech
+  const cleaned = text.trim();
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(cleaned);
+  utt.lang = 'de-DE';
+  utt.rate = 0.88;
+  utt.pitch = 1;
+
+  // Animate the button that triggered playback
+  const activeBtn = document.querySelector('.speak-btn.speaking');
+  if (activeBtn) activeBtn.classList.remove('speaking');
+
+  utt.onend = () => {
+    document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  };
+  window.speechSynthesis.speak(utt);
+}
+
+function makeSpeakBtn(text) {
+  const btn = document.createElement('button');
+  btn.className = 'speak-btn';
+  btn.setAttribute('aria-label', 'Pronounce: ' + text);
+  btn.setAttribute('data-speak', text);
+  btn.innerHTML = '<svg viewBox="0 0 20 20" fill="currentColor" width="12" height="12"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"/></svg>';
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+    this.classList.add('speaking');
+    speakDE(this.getAttribute('data-speak'));
+  });
+  return btn;
+}
+
+function injectSpeakButtons() {
+  // Vocab rows (.de spans)
+  document.querySelectorAll('.vocab-row .de, .pg-item .de').forEach(el => {
+    if (el.querySelector('.speak-btn') || el.parentElement.querySelector('.speak-btn')) return;
+    const text = el.textContent.trim();
+    if (!text || text.length < 1) return;
+    el.appendChild(makeSpeakBtn(text));
+  });
+
+  // Phrase cards (.phrase-de)
+  document.querySelectorAll('.phrase-de').forEach(el => {
+    if (el.querySelector('.speak-btn')) return;
+    const text = el.textContent.trim();
+    if (!text) return;
+    el.appendChild(makeSpeakBtn(text));
+  });
+
+  // Color items
+  document.querySelectorAll('.color-item .de').forEach(el => {
+    if (el.querySelector('.speak-btn')) return;
+    el.appendChild(makeSpeakBtn(el.textContent.trim()));
+  });
+
+  // Alphabet table — letter name column (td:nth-child(2) in pronunciation table)
+  document.querySelectorAll('.pronunciation-table-wrap tbody tr').forEach(row => {
+    const letterCell = row.querySelector('td:first-child');
+    const exampleCell = row.querySelector('td:last-child');
+    if (letterCell && !letterCell.querySelector('.speak-btn')) {
+      const letterText = letterCell.textContent.replace(/\s+/g, ' ').trim().split(' ')[0]; // just the letter
+      if (letterText) letterCell.appendChild(makeSpeakBtn(letterText));
+    }
+    if (exampleCell && !exampleCell.querySelector('.speak-btn')) {
+      const exText = exampleCell.textContent.trim().split(' ')[0]; // first word of example
+      if (exText && exText.length > 1) exampleCell.appendChild(makeSpeakBtn(exText));
+    }
+  });
+}
+
+// Inject on load, and re-inject after dynamic renders
+// Hook into tbody/container mutation for dynamic content
+const _speakObserver = new MutationObserver(() => {
+  document.querySelectorAll('#nounTableBody td[data-speak-ready="false"], #verbsContainer [data-speak-ready="false"]').forEach(el => {
+    el.removeAttribute('data-speak-ready');
+    el.appendChild(makeSpeakBtn(el.textContent.trim()));
+  });
+  // Re-run general inject after dynamic content changes
+  injectSpeakButtons();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  injectSpeakButtons();
+  // Re-inject after a short delay in case of async renders
+  setTimeout(injectSpeakButtons, 600);
+  const nounTbody = document.getElementById('nounTableBody');
+  const verbContainer = document.getElementById('verbsContainer');
+  if (nounTbody) _speakObserver.observe(nounTbody, { childList: true, subtree: false });
+  if (verbContainer) _speakObserver.observe(verbContainer, { childList: true, subtree: false });
+});
