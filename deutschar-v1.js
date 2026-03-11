@@ -1548,7 +1548,12 @@ function loadFitb() {
   `);
   const input = document.getElementById('fitbInput');
   if (input) {
-    input.focus();
+    // Only auto-focus if the section is already visible (user scrolled to it)
+    const section = document.getElementById('fitb-section');
+    if (section) {
+      const rect = section.getBoundingClientRect();
+      if (rect.top >= 0 && rect.top < window.innerHeight) input.focus();
+    }
     input.addEventListener('keydown', e => { if (e.key === 'Enter') checkFitb(); });
   }
 }
