@@ -1799,35 +1799,64 @@ console.log('%cDeutschAR.EDU v3.0 — Made by Abdelrahman Mohamed', 'color:#F0C2
 // AUDIO PRONUNCIATION (Web Speech API)
 // ═══════════════════════════════════════
 
+// Cached German voice (populated as soon as voices are available)
+let _deVoice = null;
+let _voicesLoaded = false;
+
+function _clearSpeaking() {
+  document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+}
+
+function _buildAndSpeak(cleaned) {
+  const utt = new SpeechSynthesisUtterance(cleaned);
+  utt.lang = 'de-DE';
+  utt.rate = 0.88;
+  utt.pitch = 1;
+  if (_deVoice) utt.voice = _deVoice;
+  utt.onend  = _clearSpeaking;
+  utt.onerror = _clearSpeaking;
+  window.speechSynthesis.speak(utt);
+}
+
+function _loadVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length) {
+    _voicesLoaded = true;
+    _deVoice = voices.find(v => v.lang.startsWith('de')) || null;
+  }
+}
+
 function speakDE(text) {
   if (!window.speechSynthesis) return;
   const cleaned = text.trim();
   if (!cleaned) return;
 
-  // Cancel any ongoing speech
   window.speechSynthesis.cancel();
 
-  // Chrome race condition fix: brief delay after cancel() before speak()
-  setTimeout(() => {
-    const utt = new SpeechSynthesisUtterance(cleaned);
-    utt.lang = 'de-DE';
-    utt.rate = 0.88;
-    utt.pitch = 1;
+  // If voices already cached, speak immediately (keeps user-gesture chain intact)
+  if (_voicesLoaded) {
+    _buildAndSpeak(cleaned);
+    return;
+  }
 
-    // Try to find a German voice; fall back to default
-    const voices = window.speechSynthesis.getVoices();
-    const deVoice = voices.find(v => v.lang.startsWith('de')) || null;
-    if (deVoice) utt.voice = deVoice;
+  // Voices not ready yet — try loading them now
+  _loadVoices();
 
-    utt.onend = () => {
-      document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
-    };
-    utt.onerror = () => {
-      document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
-    };
-
-    window.speechSynthesis.speak(utt);
-  }, 50);
+  if (_voicesLoaded) {
+    // Got them synchronously (Samsung Internet, desktop Chrome)
+    _buildAndSpeak(cleaned);
+  } else {
+    // Opera/Android: voices arrive async — retry up to 10 times over 1s
+    let attempts = 0;
+    const retry = setInterval(() => {
+      attempts++;
+      _loadVoices();
+      if (_voicesLoaded || attempts >= 10) {
+        clearInterval(retry);
+        _buildAndSpeak(cleaned);
+      }
+    }, 100);
+  }
 }
 
 function makeSpeakBtn(text) {
@@ -1904,10 +1933,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (nounTbody) _speakObserver.observe(nounTbody, { childList: true, subtree: false });
   if (verbContainer) _speakObserver.observe(verbContainer, { childList: true, subtree: false });
 
-  // Pre-load voices (Chrome loads them asynchronously — must be triggered early)
+  // Pre-load voices (async on Android — cache early so speakDE() is instant on first tap)
   if (window.speechSynthesis) {
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    _loadVoices();
+    window.speechSynthesis.onvoiceschanged = () => { _loadVoices(); };
   }
 });
 
