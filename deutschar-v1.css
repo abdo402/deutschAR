@@ -1698,6 +1698,25 @@ body {
   opacity: 0.7;
   margin-top: 0.2rem;
 }
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.footer-contact a {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.2s, color 0.2s;
+}
+.footer-contact a:hover {
+  opacity: 1;
+  color: var(--gold);
+}
 
 /* ═══════════════════════════════════════
    V2.0 — NEW FEATURE STYLES
