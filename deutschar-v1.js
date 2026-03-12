@@ -1796,33 +1796,33 @@ console.log('%cDeutschAR.EDU v3.0 — Made by Abdelrahman Mohamed', 'color:#F0C2
 
 
 // ═══════════════════════════════════════
-// AUDIO PRONUNCIATION (Google Translate TTS — works on all Android browsers)
+// AUDIO PRONUNCIATION (Web Speech API)
 // ═══════════════════════════════════════
-
-let _ttsAudio = null;
 
 function _clearSpeaking() {
   document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
 }
 
 function speakDE(text) {
+  if (!window.speechSynthesis) return;
   const cleaned = text.trim();
   if (!cleaned) return;
 
-  // Stop any currently playing audio
-  if (_ttsAudio) {
-    _ttsAudio.pause();
-    _ttsAudio.src = '';
-    _ttsAudio = null;
-  }
-  _clearSpeaking();
+  window.speechSynthesis.cancel();
 
-  const url = 'https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=de&client=gtx&q=' + encodeURIComponent(cleaned);
+  const utt = new SpeechSynthesisUtterance(cleaned);
+  utt.lang = 'de-DE';
+  utt.rate = 0.88;
+  utt.pitch = 1;
 
-  _ttsAudio = new Audio(url);
-  _ttsAudio.onended = _clearSpeaking;
-  _ttsAudio.onerror = _clearSpeaking;
-  _ttsAudio.play().catch(_clearSpeaking);
+  const voices = window.speechSynthesis.getVoices();
+  const deVoice = voices.find(v => v.lang.startsWith('de')) || null;
+  if (deVoice) utt.voice = deVoice;
+
+  utt.onend  = _clearSpeaking;
+  utt.onerror = _clearSpeaking;
+
+  window.speechSynthesis.speak(utt);
 }
 
 function makeSpeakBtn(text) {
@@ -1899,7 +1899,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (nounTbody) _speakObserver.observe(nounTbody, { childList: true, subtree: false });
   if (verbContainer) _speakObserver.observe(verbContainer, { childList: true, subtree: false });
 
-  // TTS handled via Google Translate Audio — no voice preload needed
+  // Pre-load voices (Chrome loads them asynchronously — must be triggered early)
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
 });
 
 
