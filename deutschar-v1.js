@@ -1420,11 +1420,12 @@ function updateDashboard() {
 }
 
 // Track visited sections via scroll spy
+const _sectionIds = new Set(sectionIndex.map(s => s.id));
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY + 100;
   let current = '';
   document.querySelectorAll('section[id]').forEach(sec => {
-    if (sec.offsetTop <= scrollY) current = sec.id;
+    if (_sectionIds.has(sec.id) && sec.offsetTop <= scrollY) current = sec.id;
   });
   if (current) {
     const visited = getVisitedSections();
@@ -2241,14 +2242,16 @@ Rules:
 - Be thorough yet encouraging — this is for exam prep`;
 
     try {
-      // Retrieve API key stored by user — never hardcoded in source
+      // ── API key — stored in user's browser only, never hardcoded ──
       const apiKey = localStorage.getItem('deutschar-api-key') || '';
       if (!apiKey) {
         const entered = window.prompt(
-          'DeutschAR.EDU — Schreibprüfer\n\nEnter your Anthropic API key to use the AI checker.\nIt will be saved locally in your browser only.'
+          'DeutschAR.EDU — Schreibprüfer\n\nEnter your Anthropic API key to use the AI checker.\nGet one free at platform.anthropic.com → API Keys.\nIt will be saved locally in your browser only.'
         );
         if (!entered || !entered.trim()) {
-          showError('API key required to run the checker. Please reload and enter your key.');
+          showError('API key required. Get yours free at platform.anthropic.com');
+          btn.disabled = false;
+          loading.classList.remove('active');
           return;
         }
         localStorage.setItem('deutschar-api-key', entered.trim());
