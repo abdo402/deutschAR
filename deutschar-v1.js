@@ -84,6 +84,21 @@
 })();
 
 // ═══════════════════════════════════════
+// LOCALSTORAGE VERSION GUARD
+// Clears stale progress data from old site versions
+// ═══════════════════════════════════════
+(function () {
+  const CURRENT_VERSION = '3.0-52';
+  const storedVersion = localStorage.getItem('deutschar-version');
+  if (storedVersion !== CURRENT_VERSION) {
+    localStorage.removeItem('deutschar-visited');
+    localStorage.removeItem('deutschar-done');
+    localStorage.removeItem('deutschar-bookmarks');
+    localStorage.setItem('deutschar-version', CURRENT_VERSION);
+  }
+})();
+
+// ═══════════════════════════════════════
 // WORD BANK DATA
 // ═══════════════════════════════════════
 
