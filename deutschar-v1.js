@@ -1799,8 +1799,25 @@ console.log('%cDeutschAR.EDU v3.0 — Made by Abdelrahman Mohamed', 'color:#F0C2
 // AUDIO PRONUNCIATION (Web Speech API)
 // ═══════════════════════════════════════
 
+// Cache for loaded voices
+let _deVoice = null;
+let _voicesReady = false;
+
+function _loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (all.length === 0) return; // not ready yet
+  _deVoice = all.find(v => v.lang === 'de-DE') ||
+             all.find(v => v.lang.startsWith('de')) ||
+             null;
+  _voicesReady = true;
+}
+
+// Ongoing speak timeout handle — clears .speaking if onend never fires (Chrome bug)
+let _speakEndTimer = null;
+
 function _clearSpeaking() {
   document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  if (_speakEndTimer) { clearTimeout(_speakEndTimer); _speakEndTimer = null; }
 }
 
 function speakDE(text) {
@@ -1808,21 +1825,34 @@ function speakDE(text) {
   const cleaned = text.trim();
   if (!cleaned) return;
 
+  // BUG FIX 1: Chrome silently drops speak() if synthesis is paused/stuck.
+  // Always resume() before cancel() to unstick the engine.
+  window.speechSynthesis.resume();
   window.speechSynthesis.cancel();
 
-  const utt = new SpeechSynthesisUtterance(cleaned);
-  utt.lang = 'de-DE';
-  utt.rate = 0.88;
-  utt.pitch = 1;
+  // BUG FIX 2: cancel() + speak() in the same tick causes Chrome to silently
+  // swallow the utterance. A small delay lets the cancel settle first.
+  setTimeout(() => {
+    const utt = new SpeechSynthesisUtterance(cleaned);
+    utt.lang = 'de-DE';
+    utt.rate = 0.88;
+    utt.pitch = 1;
 
-  const voices = window.speechSynthesis.getVoices();
-  const deVoice = voices.find(v => v.lang.startsWith('de')) || null;
-  if (deVoice) utt.voice = deVoice;
+    // BUG FIX 3: Voices may not be cached yet (Chrome async loading).
+    // Re-attempt voice lookup at speak-time if cache isn't ready.
+    if (!_voicesReady) _loadVoices();
+    if (_deVoice) utt.voice = _deVoice;
 
-  utt.onend  = _clearSpeaking;
-  utt.onerror = _clearSpeaking;
+    utt.onend   = _clearSpeaking;
+    utt.onerror = _clearSpeaking;
 
-  window.speechSynthesis.speak(utt);
+    // BUG FIX 4: Chrome's onend sometimes never fires, leaving the button
+    // stuck in .speaking state. Fallback: auto-clear after a safe maximum.
+    const maxMs = Math.max(4000, cleaned.length * 120);
+    _speakEndTimer = setTimeout(_clearSpeaking, maxMs);
+
+    window.speechSynthesis.speak(utt);
+  }, 100);
 }
 
 function makeSpeakBtn(text) {
@@ -1901,8 +1931,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Pre-load voices (Chrome loads them asynchronously — must be triggered early)
   if (window.speechSynthesis) {
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    _loadVoices(); // attempt immediately (Firefox/Safari have voices ready at load)
+    window.speechSynthesis.onvoiceschanged = _loadVoices; // Chrome fires this async
+    // Chrome keep-alive: the synthesis engine can pause silently in the background.
+    // Periodic resume() prevents the engine from getting stuck between clicks.
+    setInterval(() => {
+      if (window.speechSynthesis.speaking) window.speechSynthesis.resume();
+    }, 5000);
   }
 });
 
